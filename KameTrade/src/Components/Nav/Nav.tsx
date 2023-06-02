@@ -11,10 +11,30 @@ import SideNav from "./SideNav";
 
 const Navigation = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [color, setColor] = useState<boolean>(false);
+
+    //? Czy ja moge tak ingerować bezpośrednio w DOM?
+    const changeColor = () => {
+        window.scrollY >= 90 ? setColor(true) : setColor(false);
+    };
+
+    window.addEventListener("scroll", changeColor);
 
     return (
         <>
-            <Flex minWidth="max-content" alignItems="center" gap="2" p="3rem" justifyContent="space-between" position={"sticky"} top={"0"}>
+            <Flex
+                minWidth="max-content"
+                alignItems="center"
+                gap="2"
+                p="3rem"
+                justifyContent="space-between"
+                as="header"
+                position="sticky"
+                top="0"
+                zIndex="1000"
+                bg={color ? "rgba(0,0,0,0.16)" : ""}
+                backdropFilter="blur(1rem)"
+            >
                 <HStack w={"22rem"} _hover={{ cursor: "pointer" }}>
                     <Link to="/">
                         <img src={logo} />

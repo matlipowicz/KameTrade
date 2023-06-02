@@ -14,6 +14,9 @@ export const theme = extendTheme({
                 bg: "background.800",
                 color: "text.100",
             },
+            th: {
+                fontSize: "14px",
+            },
         }),
     },
 });

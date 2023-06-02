@@ -1,10 +1,12 @@
 import { Flex } from "@chakra-ui/react";
-const Browse = () => {
+import { useGetCoinsDataQuery } from "src/redux/store/slices/coinSlice";
+
+const LivePrice = () => {
     return (
         <Flex minHeight="100vh" alignItems={"center"} justifyContent={"center"}>
-            Browse
+            Live Price
         </Flex>
     );
 };
 
-export default Browse;
+export default LivePrice;
