@@ -78,11 +78,10 @@
 // export default BrowseTable;
 
 import { useState } from "react";
-import { TableContainer, Table, Thead, Tbody, Tr, Th, Td, Box, Link, Text, chakra, Image } from "@chakra-ui/react";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { Table, Thead, Tbody, Tr, Th, Td, Box, Link, Text, chakra, Image, Button, HStack } from "@chakra-ui/react";
 import { useReactTable, getCoreRowModel, SortingState, getSortedRowModel, getPaginationRowModel, ColumnDef, flexRender } from "@tanstack/react-table";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Coins } from "src/redux/sliceTypes";
 import millify from "millify";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -94,24 +93,25 @@ export type DataTableProps<Data extends object> = {
 
 const columnHelper = createColumnHelper<Coins>();
 const columns = [
-    columnHelper.accessor("iconUrl", {
-        header: () => "Coin",
-        cell: (info) => (
-            <Box w="5rem" h="5rem">
-                <Image src={info.getValue()} alt="Coin logo" maxH="100%" maxW="100%" />
-            </Box>
-        ),
-        enableSorting: false,
-    }),
     columnHelper.accessor("name", {
-        header: () => "",
-        cell: (info) => info.getValue(),
-        enableSorting: false,
-    }),
-    columnHelper.accessor("symbol", {
-        header: () => "",
-        cell: (info) => info.getValue(),
-        enableSorting: false,
+        header: () => <Text>Coin</Text>,
+        cell: (info) => {
+            return (
+                <HStack display="flex" gap="3rem" minW="30rem">
+                    <Box w="5rem" h="5rem">
+                        <Image src={info.row.original.iconUrl} alt="Coin logo" maxH="100%" maxW="100%" />
+                    </Box>
+                    <Box display="flex" gap="3rem">
+                        <RouterLink to={`/browse/${info.row.original.name.toLowerCase()}`}>
+                            <Button minW="8rem" fontSize="1.4rem" bg="addition.700" _hover={{ bg: "addition.800" }} _focus={{ bg: "addition.800" }}>
+                                {info.row.original.symbol}
+                            </Button>
+                        </RouterLink>
+                        <Text>{info.row.original.name}</Text>
+                    </Box>
+                </HStack>
+            );
+        },
     }),
 
     columnHelper.accessor("rank", {
@@ -124,7 +124,14 @@ const columns = [
     columnHelper.accessor("price", {
         cell: (info) => {
             const assetPrice = millify(parseFloat(info.getValue()), { precision: 4 });
-            return <Text>{assetPrice} USD</Text>;
+            return (
+                <Text>
+                    {assetPrice}{" "}
+                    <chakra.span fontSize="1.2rem" color="addition.150">
+                        USD
+                    </chakra.span>
+                </Text>
+            );
         },
         header: () => "Value",
         meta: {
@@ -133,7 +140,6 @@ const columns = [
     }),
     columnHelper.accessor("change", {
         cell: (info) => {
-            // const change = millify(parseFloat(info.getValue()), { precision: 2 });
             const change = parseFloat(info.getValue()).toFixed(2);
             const adjustColor = Number(change) > 0 ? <Text color="addition.200">+{change}%</Text> : <Text color="addition.400">{change}%</Text>;
             return adjustColor;
@@ -144,14 +150,32 @@ const columns = [
         },
     }),
     columnHelper.accessor("24hVolume", {
-        cell: (info) => millify(parseFloat(info.getValue()), { precision: 3 }),
+        cell: (info) => {
+            return (
+                <Text>
+                    {millify(parseFloat(info.getValue()), { precision: 3 })}{" "}
+                    <chakra.span fontSize="1.2rem" color="addition.150">
+                        USD
+                    </chakra.span>
+                </Text>
+            );
+        },
         header: () => "Volume 24h",
         meta: {
             isNumeric: true,
         },
     }),
     columnHelper.accessor("marketCap", {
-        cell: (info) => millify(parseFloat(info.getValue()), { precision: 3 }),
+        cell: (info) => {
+            return (
+                <Text>
+                    {millify(parseFloat(info.getValue()), { precision: 3 })}{" "}
+                    <chakra.span fontSize="1.2rem" color="addition.150">
+                        USD
+                    </chakra.span>
+                </Text>
+            );
+        },
         header: () => "Market Cap",
         meta: {
             isNumeric: true,
@@ -160,9 +184,6 @@ const columns = [
 ];
 
 export function DataTable({ data }: { data: Coins[] }) {
-    const [sorted, setSorted] = useState<SortingState>([]);
-    const navigate = useNavigate();
-
     const table = useReactTable({
         columns,
         data,
@@ -171,22 +192,18 @@ export function DataTable({ data }: { data: Coins[] }) {
         getSortedRowModel: getSortedRowModel(),
     });
 
-    // TODO: przypisac inny key zamiast indexu
-    // TODO: usunac sortowanie po Coin + dwa puste pola
     // TODO: Scroll przy większej ilości wierszy + sticky header po scrollu (jak w TradingView)
-    // TODO: wykluczyc puste pola z hovera (zrobic jako jeden table head)
-    //? Jak wyswietlic wieksza ilosc wierszy? (25/50/100)
+
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" overflowY="scroll">
+        <Box display="flex" justifyContent="center" alignItems="center" overflowY="scroll" p="3rem">
             {data !== undefined ? (
                 <Table
                     bg="rgba(0,0,0,0.16)"
                     backdropFilter="blur(1rem)"
-                    p="2rem"
                     height={"70rem"}
                     overflowY="scroll"
                     boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)"
-                    maxW="150rem"
+                    maxW="130rem"
                 >
                     <Thead>
                         {table.getHeaderGroups().map((headerGroup, index) => (
@@ -200,24 +217,25 @@ export function DataTable({ data }: { data: Coins[] }) {
                                             onClick={header.column.getToggleSortingHandler()}
                                             fontSize="1.8rem"
                                             fontWeight={400}
+                                            lineHeight="2rem"
                                             color="addition.600"
                                             p="2rem"
-                                            textAlign="center"
-                                            lineHeight="2rem"
-                                            position="relative"
                                             _hover={{ backgroundColor: "background.500", cursor: "pointer" }}
                                         >
-                                            {flexRender(header.column.columnDef.header, header.getContext())}
-
-                                            <chakra.span pos="absolute" right="1rem" top="1.8rem">
-                                                {header.column.getIsSorted() ? (
-                                                    header.column.getIsSorted() === "desc" ? (
-                                                        <ArrowDownIcon color="addition.150" />
-                                                    ) : (
-                                                        <ArrowUpIcon color="addition.150" />
-                                                    )
-                                                ) : null}
-                                            </chakra.span>
+                                            <HStack display="flex" alignItems="center" justifyContent="space-between" gap="3rem">
+                                                <Text>{flexRender(header.column.columnDef.header, header.getContext())}</Text>
+                                                <Box>
+                                                    <chakra.span position="relative" bottom="0.2rem">
+                                                        {header.column.getIsSorted() ? (
+                                                            header.column.getIsSorted() === "desc" ? (
+                                                                <ArrowDownIcon color="addition.150" />
+                                                            ) : (
+                                                                <ArrowUpIcon color="addition.150" />
+                                                            )
+                                                        ) : null}
+                                                    </chakra.span>
+                                                </Box>
+                                            </HStack>
                                         </Th>
                                     );
                                 })}
@@ -227,11 +245,11 @@ export function DataTable({ data }: { data: Coins[] }) {
                     <Tbody>
                         {table.getRowModel().rows.map((row, index) => {
                             return (
-                                <Tr key={row.original.name} maxH="min-content" onClick={() => navigate(`/browse/${row.original.name.toLowerCase()}`)}>
+                                <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }}>
                                     {row.getVisibleCells().map((cell, index) => {
                                         const meta: any = cell.column.columnDef.meta;
                                         return (
-                                            <Td key={index} isNumeric={meta?.isNumeric} lineHeight="2rem">
+                                            <Td key={index} lineHeight="2rem" textAlign="center">
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </Td>
                                         );
