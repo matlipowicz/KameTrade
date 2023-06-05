@@ -55,7 +55,7 @@ import millify from "millify";
 import { ColumnDef } from "@tanstack/react-table";
 
 const Browse = () => {
-    const { data: coins, error, isLoading } = useGetCoinsDataQuery(100);
+    const { data: coins, error, isLoading } = useGetCoinsDataQuery(143);
 
     console.log(coins);
 

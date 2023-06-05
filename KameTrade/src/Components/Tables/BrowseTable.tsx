@@ -85,6 +85,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Coins } from "src/redux/sliceTypes";
 import millify from "millify";
 import { createColumnHelper } from "@tanstack/react-table";
+import TablePagination from "../Pagination/TablePagination";
 
 export type DataTableProps<Data extends object> = {
     data: Data[];
@@ -195,7 +196,7 @@ export function DataTable({ data }: { data: Coins[] }) {
     // TODO: Scroll przy większej ilości wierszy + sticky header po scrollu (jak w TradingView)
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" overflowY="scroll" p="3rem">
+        <Box display="flex" justifyContent="center" alignItems="center" flexDir="column" overflowY="scroll" p="3rem">
             {data !== undefined ? (
                 <Table
                     bg="rgba(0,0,0,0.16)"
@@ -206,11 +207,9 @@ export function DataTable({ data }: { data: Coins[] }) {
                     maxW="130rem"
                 >
                     <Thead>
-                        {table.getHeaderGroups().map((headerGroup, index) => (
+                        {table.getHeaderGroups().map((headerGroup) => (
                             <Tr key={headerGroup.id}>
-                                {headerGroup.headers.map((header, index) => {
-                                    console.log(header);
-                                    const meta: any = header.column.columnDef.meta;
+                                {headerGroup.headers.map((header) => {
                                     return (
                                         <Th
                                             key={header.id}
@@ -247,7 +246,6 @@ export function DataTable({ data }: { data: Coins[] }) {
                             return (
                                 <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }}>
                                     {row.getVisibleCells().map((cell, index) => {
-                                        const meta: any = cell.column.columnDef.meta;
                                         return (
                                             <Td key={index} lineHeight="2rem" textAlign="center">
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -262,6 +260,7 @@ export function DataTable({ data }: { data: Coins[] }) {
             ) : (
                 <Text>Data are not defined</Text>
             )}
+            <TablePagination table={table} data={data} />
         </Box>
     );
 }
