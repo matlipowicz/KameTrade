@@ -11,33 +11,34 @@ const rangeTest = (start: number, end: number) => {
 //! ADAM WYTLUMACZY --> PAMIETAJ ADAM
 export const usePagination = ({ totalCount, pageSize, siblingCount = 1, currPage }: PaginationHookProps) =>
     useMemo(() => {
-        const totalPageCount = Math.ceil(totalCount / pageSize);
-        const totalPageNumbers = siblingCount + 1;
+        const totalPages = Math.ceil(totalCount / pageSize);
+        //? Tutaj pagesCounter powinien byc suma siblingCount + firstPage + lastPage + currentPage, ale działa tak samo caly czas? Why?
+        const pagesCounter = siblingCount;
         const leftSiblingIndex = Math.max(currPage - siblingCount, 1);
-        const rightSiblingIndex = Math.min(currPage + siblingCount, totalPageCount);
-        const shouldShowLeftDots = leftSiblingIndex > 2;
-        const shouldShowRightDots = rightSiblingIndex < totalPageCount - 2;
+        const rightSiblingIndex = Math.min(currPage + siblingCount, totalPages);
+        const showLeftDots = leftSiblingIndex > 2;
+        const showRightDots = rightSiblingIndex < totalPages - 2;
         const firstPageIndex = 1;
-        const lastPageIndex = totalPageCount;
+        const lastPageIndex = totalPages;
 
-        if (totalPageNumbers >= totalPageCount) {
-            return rangeTest(1, totalPageCount);
+        if (pagesCounter >= totalPages) {
+            return rangeTest(1, totalPages);
         }
 
-        if (!shouldShowLeftDots && shouldShowRightDots) {
+        if (!showLeftDots && showRightDots) {
             let leftItemCount = 3 + 2 * siblingCount;
             let leftRange = rangeTest(1, leftItemCount);
 
-            return [...leftRange, "...", totalPageCount];
+            return [...leftRange, "...", totalPages];
         }
 
-        if (shouldShowLeftDots && !shouldShowRightDots) {
+        if (showLeftDots && !showRightDots) {
             let rightItemCount = 3 + 2 * siblingCount;
-            let rightRange = rangeTest(totalPageCount - rightItemCount + 1, totalPageCount);
+            let rightRange = rangeTest(totalPages - rightItemCount + 1, totalPages);
             return [firstPageIndex, "...", ...rightRange];
         }
 
-        if (shouldShowLeftDots && shouldShowRightDots) {
+        if (showLeftDots && showRightDots) {
             let middleRange = rangeTest(leftSiblingIndex, rightSiblingIndex);
             return [firstPageIndex, "...", ...middleRange, "...", lastPageIndex];
         }

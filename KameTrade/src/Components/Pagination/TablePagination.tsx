@@ -1,9 +1,7 @@
-import { useMemo } from "react";
 import { Table } from "@tanstack/react-table";
-import { Box, Button, Link, UnorderedList, ListItem, chakra } from "@chakra-ui/react";
+import { Box, UnorderedList } from "@chakra-ui/react";
 import PaginationButton from "./PaginationButton";
 import PaginationPage from "./PaginationPage";
-import { PaginationHookProps } from "./paginationTypes";
 import { usePagination } from "./PaginationHook";
 import { Coins } from "src/redux/sliceTypes";
 
@@ -22,7 +20,7 @@ const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] }) 
     return (
         <Box>
             <Box>
-                <Box display="flex" gap="1rem" mt="3rem" alignItems="center">
+                <Box display="flex" gap="1rem" alignItems="center">
                     <PaginationButton
                         onClick={() => {
                             if (table.getCanPreviousPage()) table.setPageIndex(0);
