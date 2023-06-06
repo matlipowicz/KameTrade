@@ -1,95 +1,19 @@
-// import { useState, useEffect, useRef } from "react";
-// import { useGetCoinsDataQuery } from "src/redux/store/slices/coinSlice";
-// import { Coins } from "src/redux/sliceTypes";
-// // import useStickyHeader from "./StickyHeader";
-// import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Text, Box, Link } from "@chakra-ui/react";
-// import { useReactTable, flexRender, getCoreRowModel, ColumnDef, SortingState, getSortedRowModel } from "@tanstack/react-table";
-// import millify from "millify";
-
-// const BrowseTable = () => {
-//     const { data: coins, error, isLoading } = useGetCoinsDataQuery(100);
-//     ``;
-//     const coinData = coins?.data.coins;
-//     console.log(coinData);
-
-//     return (
-//         <>
-//             <Box>
-//                 <Box display="flex" justifyContent="space-between" w="40rem" p="2rem" bg="rgba(0,0,0,0.16)">
-//                     <Link>Coins</Link>
-//                     <Link>Stocks</Link>
-//                     <Link>Commodities</Link>
-//                 </Box>
-
-//                 <TableContainer
-//                     bg="rgba(0,0,0,0.16)"
-//                     backdropFilter="blur(1rem)"
-//                     p="2rem"
-//                     height={"70rem"}
-//                     overflowY="scroll"
-//                     boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)"
-//                 >
-//                     <Table variant={"simple"}>
-//                         <Thead>
-//                             <Tr position="sticky" top="0">
-//                                 <Td>Coin</Td>
-//                                 <Td>Rank</Td>
-//                                 <Td>Value</Td>
-//                                 <Td>Change (%)</Td>
-//                                 <Td>Volume 24h</Td>
-//                                 <Td>Market Cap</Td>
-//                             </Tr>
-//                         </Thead>
-//                         <Tbody>
-//                             {coinData?.map((coin: Coins, index) => {
-//                                 return (
-//                                     <Tr key={index}>
-//                                         <Td>
-//                                             <Box display="flex" alignItems="center" gap="2rem">
-//                                                 <div>
-//                                                     <img src={coin.iconUrl} style={{ width: "5rem", height: "5rem" }} />
-//                                                 </div>
-//                                                 <Text>{coin.symbol}</Text>
-//                                                 <Text>{coin.name}</Text>
-//                                             </Box>
-//                                         </Td>
-//                                         <Td textAlign="right">{coin.rank}</Td>
-//                                         <Td textAlign="right">${millify(Number(coin.price), { precision: 2 })}</Td>
-//                                         <Td textAlign="right">
-//                                             {Number(coin.change) > 0 ? (
-//                                                 <Text color="addition.200">{coin.change}%</Text>
-//                                             ) : (
-//                                                 <Text color="addition.400">{coin.change}%</Text>
-//                                             )}
-//                                         </Td>
-//                                         <Td textAlign="right">${millify(Number(coin["24hVolume"]), { precision: 3 })}</Td>
-//                                         <Td textAlign="right">${millify(Number(coin.marketCap), { precision: 3 })}</Td>
-//                                     </Tr>
-//                                 );
-//                             })}
-//                         </Tbody>
-//                     </Table>
-//                 </TableContainer>
-//             </Box>
-//         </>
-//     );
-// };
-
-// export default BrowseTable;
-
-import { useState } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, Box, Link, Text, chakra, Image, Button, HStack } from "@chakra-ui/react";
+import { useLayoutEffect, useState, useRef, useCallback } from "react";
+import { Table, Thead, Tbody, Tr, Th, Td, Box, Text, chakra, Image, Button, HStack, Select, TableContainer } from "@chakra-ui/react";
 import { useReactTable, getCoreRowModel, SortingState, getSortedRowModel, getPaginationRowModel, ColumnDef, flexRender } from "@tanstack/react-table";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { Coins } from "src/redux/sliceTypes";
-import millify from "millify";
 import { createColumnHelper } from "@tanstack/react-table";
+import TablePagination from "../Pagination/TablePagination";
+import millify from "millify";
 
 export type DataTableProps<Data extends object> = {
     data: Data[];
     columns: ColumnDef<Data, any>[];
 };
+
+const rowSelectionNumber: number[] = [10, 20, 30, 40, 50];
 
 const columnHelper = createColumnHelper<Coins>();
 const columns = [
@@ -184,6 +108,8 @@ const columns = [
 ];
 
 export function DataTable({ data }: { data: Coins[] }) {
+    const [scrollTop, setScrollTop] = useState(false);
+    const tableRef = useRef<HTMLElement | null>(null);
     const table = useReactTable({
         columns,
         data,
@@ -195,73 +121,102 @@ export function DataTable({ data }: { data: Coins[] }) {
     // TODO: Scroll przy większej ilości wierszy + sticky header po scrollu (jak w TradingView)
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" overflowY="scroll" p="3rem">
-            {data !== undefined ? (
-                <Table
-                    bg="rgba(0,0,0,0.16)"
-                    backdropFilter="blur(1rem)"
-                    height={"70rem"}
-                    overflowY="scroll"
-                    boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)"
-                    maxW="130rem"
-                >
-                    <Thead>
-                        {table.getHeaderGroups().map((headerGroup, index) => (
-                            <Tr key={headerGroup.id}>
-                                {headerGroup.headers.map((header, index) => {
-                                    console.log(header);
-                                    const meta: any = header.column.columnDef.meta;
+        <>
+            <Box display="flex" justifyContent="center" alignItems="center" flexDir="column" p="3rem">
+                <Box maxH="83.1rem" overflowY="scroll">
+                    {data !== undefined ? (
+                        <Table
+                            bg="rgba(0,0,0,0.16)"
+                            backdropFilter="blur(1rem)"
+                            height={"70rem"}
+                            boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)"
+                            maxW="130rem"
+                            overflowY="scroll"
+                        >
+                            <Thead position="relative">
+                                {table.getHeaderGroups().map((headerGroup) => (
+                                    <Tr key={headerGroup.id}>
+                                        {headerGroup.headers.map((header) => {
+                                            return (
+                                                <Th
+                                                    key={header.id}
+                                                    onClick={header.column.getToggleSortingHandler()}
+                                                    fontSize="1.8rem"
+                                                    fontWeight={400}
+                                                    lineHeight="2rem"
+                                                    color="addition.600"
+                                                    p="2rem"
+                                                    _hover={{ backgroundColor: "background.500", cursor: "pointer" }}
+                                                    position="sticky"
+                                                    top="0"
+                                                >
+                                                    <HStack display="flex" alignItems="center" justifyContent="space-between" gap="3rem">
+                                                        <Text>{flexRender(header.column.columnDef.header, header.getContext())}</Text>
+                                                        <Box>
+                                                            <chakra.span position="relative" bottom="0.2rem">
+                                                                {header.column.getIsSorted() ? (
+                                                                    header.column.getIsSorted() === "desc" ? (
+                                                                        <ArrowDownIcon color="addition.150" />
+                                                                    ) : (
+                                                                        <ArrowUpIcon color="addition.150" />
+                                                                    )
+                                                                ) : null}
+                                                            </chakra.span>
+                                                        </Box>
+                                                    </HStack>
+                                                </Th>
+                                            );
+                                        })}
+                                    </Tr>
+                                ))}
+                            </Thead>
+                            <Tbody>
+                                {table.getRowModel().rows.map((row) => {
                                     return (
-                                        <Th
-                                            key={header.id}
-                                            onClick={header.column.getToggleSortingHandler()}
-                                            fontSize="1.8rem"
-                                            fontWeight={400}
-                                            lineHeight="2rem"
-                                            color="addition.600"
-                                            p="2rem"
-                                            _hover={{ backgroundColor: "background.500", cursor: "pointer" }}
-                                        >
-                                            <HStack display="flex" alignItems="center" justifyContent="space-between" gap="3rem">
-                                                <Text>{flexRender(header.column.columnDef.header, header.getContext())}</Text>
-                                                <Box>
-                                                    <chakra.span position="relative" bottom="0.2rem">
-                                                        {header.column.getIsSorted() ? (
-                                                            header.column.getIsSorted() === "desc" ? (
-                                                                <ArrowDownIcon color="addition.150" />
-                                                            ) : (
-                                                                <ArrowUpIcon color="addition.150" />
-                                                            )
-                                                        ) : null}
-                                                    </chakra.span>
-                                                </Box>
-                                            </HStack>
-                                        </Th>
+                                        <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }}>
+                                            {row.getVisibleCells().map((cell, index) => {
+                                                return (
+                                                    <Td key={index} lineHeight="2rem" textAlign="center">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </Td>
+                                                );
+                                            })}
+                                        </Tr>
                                     );
                                 })}
-                            </Tr>
-                        ))}
-                    </Thead>
-                    <Tbody>
-                        {table.getRowModel().rows.map((row, index) => {
-                            return (
-                                <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }}>
-                                    {row.getVisibleCells().map((cell, index) => {
-                                        const meta: any = cell.column.columnDef.meta;
-                                        return (
-                                            <Td key={index} lineHeight="2rem" textAlign="center">
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </Td>
-                                        );
-                                    })}
-                                </Tr>
-                            );
-                        })}
-                    </Tbody>
-                </Table>
-            ) : (
-                <Text>Data are not defined</Text>
-            )}
-        </Box>
+                            </Tbody>
+                        </Table>
+                    ) : (
+                        <Text>Data are not defined</Text>
+                    )}
+                </Box>
+                <HStack display="flex" alignItems="center" justifyContent="space-between" w="100%" p="1rem 3rem 5rem" maxW="125rem">
+                    <Box display="flex" gap="1.5rem">
+                        <Text>Show</Text>
+                        <Box>
+                            <Select
+                                value={table.getState().pagination.pageSize}
+                                onChange={(e) => table.setPageSize(Number(e.target.value))}
+                                textAlign="center"
+                                fontSize="1.4rem"
+                                color="addition.200"
+                                borderColor="addition.200"
+                                _hover={{ borderColor: "addition.250" }}
+                                focusBorderColor="addition.250"
+                            >
+                                {rowSelectionNumber.map((pageSize) => (
+                                    <option key={pageSize} value={pageSize}>
+                                        {pageSize}
+                                    </option>
+                                ))}
+                            </Select>
+                        </Box>
+
+                        <Text>rows per page</Text>
+                    </Box>
+                    <TablePagination table={table} data={data} />
+                </HStack>
+            </Box>
+        </>
     );
 }

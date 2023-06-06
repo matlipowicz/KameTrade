@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "src/assets/logo/Dark-version.svg";
 import { Box, Flex, Spacer, Text, HStack, useDisclosure, IconButton } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
@@ -18,7 +18,10 @@ const Navigation = () => {
         window.scrollY >= 90 ? setColor(true) : setColor(false);
     };
 
-    window.addEventListener("scroll", changeColor);
+    useEffect(() => {
+        window.addEventListener("scroll", changeColor);
+        return window.removeEventListener("scroll", changeColor);
+    }, []);
 
     return (
         <>
