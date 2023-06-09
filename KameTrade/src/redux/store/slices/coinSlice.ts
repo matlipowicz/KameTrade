@@ -35,5 +35,3 @@ export const coinApi = createApi({
 
 export const { useGetCoinsDataQuery } = coinApi;
 export const { useGetHistoricalCoinDataQuery } = coinApi;
-
-//* COIN DATA - CoinRanking

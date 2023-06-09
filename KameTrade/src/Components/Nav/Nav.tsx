@@ -13,15 +13,16 @@ const Navigation = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [color, setColor] = useState<boolean>(false);
 
-    //? Czy ja moge tak ingerować bezpośrednio w DOM?
     const changeColor = () => {
         window.scrollY >= 90 ? setColor(true) : setColor(false);
     };
 
     useEffect(() => {
         window.addEventListener("scroll", changeColor);
-        return window.removeEventListener("scroll", changeColor);
-    }, []);
+        return () => {
+            window.removeEventListener("scroll", changeColor);
+        };
+    }, [color]);
 
     return (
         <>
@@ -34,9 +35,9 @@ const Navigation = () => {
                 as="header"
                 position="sticky"
                 top="0"
-                zIndex="1000"
-                bg={color ? "rgba(0,0,0,0.16)" : ""}
-                backdropFilter="blur(1rem)"
+                zIndex="1"
+                bg={color ? "rgba(40,40,60,0.5)" : "none"}
+                backdropFilter="blur(1.5rem)"
             >
                 <HStack w={"22rem"} _hover={{ cursor: "pointer" }}>
                     <Link to="/">
