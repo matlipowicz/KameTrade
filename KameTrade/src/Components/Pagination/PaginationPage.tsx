@@ -3,7 +3,7 @@ import { TableProps } from "./TablePagination";
 import { Table } from "@tanstack/react-table";
 
 // TODO: Add dots after 5th page, then
-const PaginationPage = ({ pageNumber, pageIndex, table }: { pageNumber: number; pageIndex: number; table: Table<any> }) => {
+const PaginationPage = ({ pageNumber, pageIndex, table }: { pageNumber: number | string; pageIndex: number; table: Table<any> }) => {
     return (
         <ListItem
             key={pageNumber}

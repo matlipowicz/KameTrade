@@ -7,21 +7,21 @@ const rangeTest = (start: number, end: number) => {
 
     return Array.from({ length }, (_, idx) => idx + start);
 };
+//TODO: BUGFIX kropki przy powrocie na 1 stronnie znikaja
+//TODO: Understand the concept of dots in pagination
+const firstPageIndex = 1;
 //! Pagination hook --> move as separate component
 //! ADAM WYTLUMACZY --> PAMIETAJ ADAM
 export const usePagination = ({ totalCount, pageSize, siblingCount = 1, currPage }: PaginationHookProps) =>
     useMemo(() => {
         const totalPages = Math.ceil(totalCount / pageSize);
         //? Tutaj pagesCounter powinien byc suma siblingCount + firstPage + lastPage + currentPage, ale działa tak samo caly czas? Why?
-        const pagesCounter = siblingCount;
         const leftSiblingIndex = Math.max(currPage - siblingCount, 1);
         const rightSiblingIndex = Math.min(currPage + siblingCount, totalPages);
         const showLeftDots = leftSiblingIndex > 2;
         const showRightDots = rightSiblingIndex < totalPages - 2;
-        const firstPageIndex = 1;
-        const lastPageIndex = totalPages;
 
-        if (pagesCounter >= totalPages) {
+        if (siblingCount >= totalPages) {
             return rangeTest(1, totalPages);
         }
 
@@ -40,6 +40,6 @@ export const usePagination = ({ totalCount, pageSize, siblingCount = 1, currPage
 
         if (showLeftDots && showRightDots) {
             let middleRange = rangeTest(leftSiblingIndex, rightSiblingIndex);
-            return [firstPageIndex, "...", ...middleRange, "...", lastPageIndex];
+            return [firstPageIndex, "...", ...middleRange, "...", totalPages];
         }
     }, [totalCount, pageSize, siblingCount, currPage]);

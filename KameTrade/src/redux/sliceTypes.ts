@@ -113,3 +113,58 @@ export interface History {
     price: string;
     timestamp: number;
 }
+
+// Stock List
+
+export interface RootStockListObject {
+    data: Datum[];
+    status: string;
+}
+
+export interface Datum {
+    country: string;
+    currency: string;
+    exchange: string;
+    mic_code: string;
+    name: string;
+    symbol: string;
+    type: string;
+}
+
+// Stock details
+
+export interface Profile {
+    CEO: string;
+    address: string;
+    city: string;
+    country: string;
+    description: string;
+    employees: number;
+    exchange: string;
+    industry: string;
+    mic_code: string;
+    name: string;
+    phone: string;
+    sector: string;
+    state: string;
+    symbol: string;
+    type: string;
+    website: string;
+    zip: string;
+}
+// Stock logo
+export interface StockLogo {
+    symbol: string;
+    url: string;
+}
+
+// Commodities
+export interface Commodity {
+    change: string;
+    changePercentage: string;
+    high: string;
+    last: string;
+    low: string;
+    name: string;
+    time: string;
+}

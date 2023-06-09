@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Commodity } from "src/redux/sliceTypes";
 
 if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
     throw new Error("Please provide api key");
@@ -12,7 +13,7 @@ export const commodityApi = createApi({
     reducerPath: "commodityApi",
     baseQuery: fetchBaseQuery({ baseUrl: "https://global-stock-market-api-data.p.rapidapi.com" }),
     endpoints: (builder) => ({
-        getCommoditiesByPrice: builder.query<string, void>({
+        getCommoditiesByPrice: builder.query<Commodity[], void>({
             query: () => makeRequest(`/major_commodity_by_price`),
         }),
         getCommoditiesByPerformance: builder.query<string, void>({

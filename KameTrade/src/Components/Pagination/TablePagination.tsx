@@ -3,17 +3,17 @@ import { Box, UnorderedList } from "@chakra-ui/react";
 import PaginationButton from "./PaginationButton";
 import PaginationPage from "./PaginationPage";
 import { usePagination } from "./PaginationHook";
-import { Coins } from "src/redux/sliceTypes";
+import { Coins, Commodity } from "src/redux/sliceTypes";
 
 export type TableProps = {
     table: Table<any>;
 };
 
-const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] }) => {
-    //* Page size + page index
+const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] | Commodity[] }) => {
     const state = table.getState().pagination;
-    // Pages Range
+    //* Page size + page index
     const pagesRange = usePagination({ currPage: state.pageIndex, totalCount: data.length, siblingCount: 1, pageSize: state.pageSize });
+    // Pages Range
     // Last page fn
     const goLastPage = () => table.setPageIndex(table.getPageCount() - 1);
 
@@ -40,11 +40,11 @@ const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] }) 
                     >
                         Prev
                     </PaginationButton>
-
+                    {/* !There is no unique key to add in mapped pagesRange */}
                     <Box>
                         <UnorderedList display="flex" gap="2rem" listStyleType="none">
-                            {pagesRange?.map((pageNumber: any) => {
-                                return <PaginationPage pageNumber={pageNumber} pageIndex={state.pageIndex + 1} table={table} />;
+                            {pagesRange?.map((pageNumber: number | string, index) => {
+                                return <PaginationPage pageNumber={pageNumber} pageIndex={state.pageIndex + 1} table={table} key={index} />;
                             })}
                         </UnorderedList>
                     </Box>

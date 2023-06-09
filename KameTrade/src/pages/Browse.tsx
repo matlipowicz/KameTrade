@@ -1,25 +1,45 @@
+import { useEffect, useState } from "react";
 import { useGetCoinsDataQuery } from "src/redux/store/slices/coinSlice";
-import { DataTable } from "src/Components/Tables/BrowseTable.tsx";
-import { Heading } from "@chakra-ui/react";
+import { useGetStockDataQuery } from "src/redux/store/slices/stockSlice";
+import { useGetStockListQuery } from "src/redux/store/slices/stockDetailSlice";
+import { useGetStockPriceQuery } from "src/redux/store/slices/stockSlice";
+import { useGetStockProfileQuery } from "src/redux/store/slices/stockDetailSlice";
+import { useGetCommoditiesByPriceQuery } from "src/redux/store/slices/commoditySlice";
+import { BrowseTable } from "src/Components/Tables/BrowseTable.tsx";
+import { Box, HStack, Heading, Spinner, Table, Thead, Tbody, Tr, Th } from "@chakra-ui/react";
 
 const Browse = () => {
-    const { data: coins, error, isLoading } = useGetCoinsDataQuery(500);
+    //! COINS DATA
 
-    if (isLoading) {
-        return <Heading>Loading...</Heading>;
-    }
-    if (error && !coins) {
-        return <Heading>Error</Heading>;
-    }
+    //! COMMODITIES DATA
+    const { data: commodities } = useGetCommoditiesByPriceQuery();
 
-    const coinsData = coins?.data.coins;
-    if (!coinsData) {
-        return <p>Please refresh page...</p>;
-    }
+    //! Stock
+    // List
+    // const { data: stockList } = useGetStockListQuery();
+    // const { data: test } = useGetStockProfileQuery();
+
+    // console.log("Stock", stockList);
+    // const listOfStockNames = stockList?.data;
+
+    // Data for table
+
+    // if (!commodities || !coinsData || isFetching) {
+    //     return (
+    //         <>
+    //             <HStack h="100%" display="flex" justifyContent="center" alignItems="center" p="8rem">
+    //                 <Box h="85.1rem" w="136.2rem" bg="rgba(0,0,0,0.16)" display="flex" justifyContent="center" alignItems="center">
+    //                     <Spinner color="addition.100" emptyColor="background.500" thickness="0.5rem" speed="0.75s" size="xl" />
+    //                 </Box>
+    //             </HStack>
+    //         </>
+    //     );
+    // }
+
     return (
-        <div>
-            <DataTable data={coinsData} />
-        </div>
+        <>
+            <BrowseTable />
+        </>
     );
 };
 
