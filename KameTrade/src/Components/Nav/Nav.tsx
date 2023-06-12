@@ -33,9 +33,9 @@ const Navigation = () => {
                 p="3rem"
                 justifyContent="space-between"
                 as="header"
-                position="sticky"
-                top="0"
                 zIndex="1"
+                // position="sticky"
+                // top="0"
                 bg={color ? "rgba(40,40,60,0.5)" : "none"}
                 backdropFilter="blur(1.5rem)"
             >

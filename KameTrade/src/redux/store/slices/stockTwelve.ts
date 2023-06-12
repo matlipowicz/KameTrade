@@ -12,8 +12,8 @@ const cryptoHeaders = {
 
 const makeRequest = (url: string) => ({ url, headers: cryptoHeaders });
 
-export const stockDetailApi = createApi({
-    reducerPath: "stockDetailApi",
+export const stockTwelveApi = createApi({
+    reducerPath: "stockTwelveApi",
     baseQuery: fetchBaseQuery({ baseUrl: "https://twelve-data1.p.rapidapi.com" }),
     endpoints: (builder) => ({
         getStockList: builder.query<{ data: Datum[] }, void>({
@@ -25,9 +25,18 @@ export const stockDetailApi = createApi({
         getStockProfile: builder.query<Profile, void>({
             query: (symbol) => makeRequest(`/profile?symbol=${symbol}`),
         }),
+        getStockLastQuote: builder.query<Profile, { symbol: string; interval: string }>({
+            query: ({ symbol, interval }) => makeRequest(`/quote?symbol=${symbol}&interval=${interval}&format=json`),
+        }),
+        getHistoryData: builder.query<Profile, { symbol: string; interval: string; outputsize: string }>({
+            query: ({ symbol, interval, outputsize }) =>
+                makeRequest(`/time_series?symbol=${symbol}&interval=${interval}&outputsize=${outputsize}&format=json`),
+        }),
     }),
 });
 
-export const { useGetStockListQuery } = stockDetailApi;
-export const { useGetStockLogoQuery } = stockDetailApi;
-export const { useGetStockProfileQuery } = stockDetailApi;
+export const { useGetStockListQuery } = stockTwelveApi;
+export const { useGetStockLogoQuery } = stockTwelveApi;
+export const { useGetStockProfileQuery } = stockTwelveApi;
+export const { useGetStockLastQuoteQuery } = stockTwelveApi;
+export const { useGetHistoryDataQuery } = stockTwelveApi;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useGetCoinsDataQuery } from "src/redux/store/slices/coinSlice";
-import { useGetStockDataQuery } from "src/redux/store/slices/stockSlice";
-import { useGetStockListQuery } from "src/redux/store/slices/stockDetailSlice";
-import { useGetStockPriceQuery } from "src/redux/store/slices/stockSlice";
-import { useGetStockProfileQuery } from "src/redux/store/slices/stockDetailSlice";
+import { useGetStockDataQuery } from "src/redux/store/slices/stockYahoo";
+import { useGetStockListQuery } from "src/redux/store/slices/stockTwelve";
+import { useGetStockPriceQuery } from "src/redux/store/slices/stockYahoo";
+import { useGetStockProfileQuery } from "src/redux/store/slices/stockTwelve";
 import { useGetCommoditiesByPriceQuery } from "src/redux/store/slices/commoditySlice";
 import { BrowseTable } from "src/Components/Tables/BrowseTable.tsx";
 import { Box, HStack, Heading, Spinner, Table, Thead, Tbody, Tr, Th } from "@chakra-ui/react";

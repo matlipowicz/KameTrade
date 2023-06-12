@@ -8,7 +8,7 @@ if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
     throw new Error("Please provide api key");
 }
 const cryptoHeaders = {
-    "X-RapidAPI-Key": import.meta.env.VITE_COINRANKING_API_KEY,
+    "X-RapidAPI-Key": "3467572494mshba02a5032e24b90p1715eajsn7205b51bd707",
     "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
 };
 
