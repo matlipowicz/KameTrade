@@ -3,7 +3,6 @@ import { flexRender } from "@tanstack/react-table";
 import { Datum } from "src/redux/sliceTypes";
 
 export const StockBody = ({ stockListData, table, columnQuantity }: { stockListData: Datum[]; table: any; columnQuantity: number }) => {
-    console.log(stockListData);
     return (
         <>
             <Tbody h="71rem" maxW="120rem">

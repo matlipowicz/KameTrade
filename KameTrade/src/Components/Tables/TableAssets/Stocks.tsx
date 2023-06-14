@@ -11,7 +11,7 @@ import { RootState } from "src/redux/store/rootStore";
 import { RowSelector } from "../RowSelector";
 import TablePagination from "src/Components/Pagination/TablePagination";
 
-const Stocks = () => {
+export const Stocks = () => {
     const { data: stocksList } = useGetStockListQuery();
     const { data: stockDetail } = useGetStockLastQuoteQuery({ symbol: "AAPL", interval: "1day" });
     const { data: stockStatistic } = useGetStockTotalPriceQuery("AAPL");
@@ -91,5 +91,3 @@ const Stocks = () => {
         </>
     );
 };
-
-export default Stocks;

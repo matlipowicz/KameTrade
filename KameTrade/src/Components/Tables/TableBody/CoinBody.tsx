@@ -3,14 +3,24 @@ import { flexRender } from "@tanstack/react-table";
 import { Coin, Coins } from "src/redux/sliceTypes";
 import { Table } from "@tanstack/react-table";
 
-export const CoinBody = ({ coinsData, table, columnQuantity }: { coinsData: Coin[]; table: Table<Coins>; columnQuantity: number }) => {
+export const CoinBody = ({
+    coinsData,
+    table,
+    columnQuantity,
+    query,
+}: {
+    coinsData: Coin[];
+    table: Table<Coins>;
+    columnQuantity: number;
+    query: string;
+}) => {
     return (
         <>
-            <Tbody h="71rem" maxW="120rem">
+            <Tbody maxW="120rem">
                 {coinsData ? (
                     table.getRowModel().rows.map((row) => {
                         return (
-                            <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }}>
+                            <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }} lineHeight="30rem">
                                 {row.getVisibleCells().map((cell, index) => {
                                     return (
                                         <Td key={index} lineHeight="2rem" textAlign="center">

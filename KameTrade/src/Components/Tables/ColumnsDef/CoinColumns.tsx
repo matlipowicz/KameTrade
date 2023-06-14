@@ -21,7 +21,7 @@ export const CoinColumns = [
                         <Image src={info.row.original.iconUrl} alt="Coin logo" maxH="100%" maxW="100%" />
                     </Box>
                     <Box display="flex" gap="3rem">
-                        <RouterLink to={`/browse/${info.row.original.symbol.toLowerCase()}`}>
+                        <RouterLink to={`/browse/crypto/${info.row.original.symbol}/${info.row.original.uuid}`}>
                             <Button
                                 minW="8rem"
                                 fontSize="1.4rem"

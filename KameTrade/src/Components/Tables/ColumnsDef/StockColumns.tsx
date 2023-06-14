@@ -19,7 +19,7 @@ export const StockColumns = [
             return (
                 <HStack>
                     <Box display="flex" alignItems="center" gap="3rem" w="100%">
-                        <RouterLink to={`/browse/${info.row.original.symbol.toLowerCase()}`}>
+                        <RouterLink to={`/browse/stock/${info.row.original.symbol}`}>
                             <Button
                                 minW="8rem"
                                 fontSize="1.4rem"
@@ -33,7 +33,7 @@ export const StockColumns = [
                         </RouterLink>
                         <Text>{info.row.original.name}</Text>
                         <Box flexGrow="1">
-                            <RouterLink to={`/browse/${info.row.original.symbol.toLowerCase()}`}>
+                            <RouterLink to={`/browse/stock/${info.row.original.symbol}`}>
                                 <Box display="flex" alignItems="center" gap="2rem" justifyContent="end">
                                     <Text color="addition.600">Show more</Text>
                                     <ChevronRightIcon

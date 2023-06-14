@@ -3,6 +3,14 @@ export interface CoinDataTypes {
     status: string;
 }
 
+export interface CoinPriceTypes {
+    status: string;
+    data: {
+        price: string;
+        timestamp: number;
+    };
+}
+
 export interface Data {
     coins: Coin[];
     stats: Stats;
@@ -99,6 +107,20 @@ export interface Supply {
 
 // Coin price history
 
+export interface StockHistory {
+    meta: Datum;
+    values: HistoryValues[];
+    status: string;
+}
+
+export interface HistoryValues {
+    close: string;
+    datetime: string;
+    high: string;
+    low: string;
+    open: string;
+    volume: string;
+}
 export interface RootHistory {
     data: Data;
     status: string;
@@ -167,4 +189,76 @@ export interface Commodity {
     low: string;
     name: string;
     time: string;
+}
+
+// Yahoo - stocks
+export interface YahooRootObject {
+    defaultKeyStatistics: DefaultKeyStatistics;
+}
+
+export interface DefaultKeyStatistics {
+    "52WeekChange": The52_WeekChange;
+    SandP52WeekChange: The52_WeekChange;
+    annualHoldingsTurnover: any[];
+    annualReportExpenseRatio: any[];
+    beta: The52_WeekChange;
+    beta3Year: any[];
+    bookValue: The52_WeekChange;
+    category: null;
+    dateShortInterest: The52_WeekChange;
+    earningsQuarterlyGrowth: any[];
+    enterpriseToEbitda: The52_WeekChange;
+    enterpriseToRevenue: The52_WeekChange;
+    enterpriseValue: EnterpriseValue;
+    fiveYearAverageReturn: any[];
+    floatShares: EnterpriseValue;
+    forwardEps: The52_WeekChange;
+    forwardPE: The52_WeekChange;
+    fundFamily: null;
+    fundInceptionDate: any[];
+    heldPercentInsiders: The52_WeekChange;
+    heldPercentInstitutions: The52_WeekChange;
+    impliedSharesOutstanding: EnterpriseValue;
+    lastCapGain: any[];
+    lastDividendDate: The52_WeekChange;
+    lastDividendValue: The52_WeekChange;
+    lastFiscalYearEnd: The52_WeekChange;
+    lastSplitDate: any[];
+    lastSplitFactor: null;
+    legalType: null;
+    maxAge: number;
+    morningStarOverallRating: any[];
+    morningStarRiskRating: any[];
+    mostRecentQuarter: The52_WeekChange;
+    netIncomeToCommon: EnterpriseValue;
+    nextFiscalYearEnd: The52_WeekChange;
+    pegRatio: The52_WeekChange;
+    priceHint: EnterpriseValue;
+    priceToBook: The52_WeekChange;
+    priceToSalesTrailing12Months: any[];
+    profitMargins: The52_WeekChange;
+    revenueQuarterlyGrowth: any[];
+    sharesOutstanding: EnterpriseValue;
+    sharesPercentSharesOut: The52_WeekChange;
+    sharesShort: EnterpriseValue;
+    sharesShortPreviousMonthDate: The52_WeekChange;
+    sharesShortPriorMonth: EnterpriseValue;
+    shortPercentOfFloat: any[];
+    shortRatio: The52_WeekChange;
+    threeYearAverageReturn: any[];
+    totalAssets: any[];
+    trailingEps: The52_WeekChange;
+    yield: any[];
+    ytdReturn: any[];
+}
+
+export interface The52_WeekChange {
+    fmt: string;
+    raw: number;
+}
+
+export interface EnterpriseValue {
+    fmt: null | string;
+    longFmt: string;
+    raw: number;
 }
