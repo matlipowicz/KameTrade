@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { YahooRootObject } from "src/redux/sliceTypes";
 
 if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
     throw new Error("Please provide api key");
@@ -16,7 +17,7 @@ export const stockYahooApi = createApi({
     reducerPath: "stockYahooApi",
     baseQuery: fetchBaseQuery({ baseUrl: "https://yahoo-finance15.p.rapidapi.com/api/yahoo" }),
     endpoints: (builder) => ({
-        getStockTotalPrice: builder.query<any, string>({
+        getStockTotalPrice: builder.query<YahooRootObject, string>({
             query: (symbol) => makeRequest(`/qu/quote/${symbol}/default-key-statistics`),
         }),
     }),

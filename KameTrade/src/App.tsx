@@ -7,10 +7,12 @@ import "@fontsource/saira/700.css";
 import Navigation from "./Components/Nav/Nav.tsx";
 import Footer from "./Components/Footer/Footer.tsx";
 import { About, Browse, LivePrice, Profile, SymulateInvest } from "./pages/index";
-import AssetDetails from "./Components/Assets/AssetDetails.tsx";
+import { CoinDetails } from "./Components/AssetDetails/CoinDetails.tsx";
+import { StockDetails } from "./Components/AssetDetails/StockDetail";
 import GridLayout from "./layouts/Grid.tsx";
 import { GridItem } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
+
 // TODO: Lazy loading
 
 function App() {
@@ -41,7 +43,12 @@ function App() {
                                         </GridItem>
                                     }
                                 />
-                                <Route path=":id" element={<AssetDetails />} />
+                                <Route path="crypto">
+                                    <Route path=":id/:uuid" element={<CoinDetails />} />
+                                </Route>
+                                <Route path="stock">
+                                    <Route path=":id" element={<StockDetails />} />
+                                </Route>
                             </Route>
 
                             <Route path="/live_price" element={<LivePrice />} />
