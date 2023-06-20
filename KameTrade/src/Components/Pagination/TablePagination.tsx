@@ -1,7 +1,7 @@
 import { Table } from "@tanstack/react-table";
 import { Box, UnorderedList } from "@chakra-ui/react";
-import PaginationButton from "./PaginationButton";
-import PaginationPage from "./PaginationPage";
+import { PaginationButton } from "./PaginationButton";
+import { PaginationPage } from "./PaginationPage";
 import { usePagination } from "./PaginationHook";
 import { Coins, Datum } from "src/redux/sliceTypes";
 
@@ -9,7 +9,7 @@ export type TableProps = {
     table: Table<any>;
 };
 
-const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] | Datum[] }) => {
+export const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] | Datum[] }) => {
     const state = table.getState().pagination;
     //* Page size + page index
     const pagesRange = usePagination({ currPage: state.pageIndex, totalCount: data.length, siblingCount: 1, pageSize: state.pageSize });
@@ -73,5 +73,3 @@ const TablePagination = ({ table, data }: { table: Table<any>; data: Coins[] | D
         </Box>
     );
 };
-
-export default TablePagination;

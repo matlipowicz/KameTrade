@@ -1,8 +1,7 @@
 import { Button } from "@chakra-ui/react";
-import { ReactNode } from "react";
-import { PaginationBtnProps } from "./paginationTypes";
+import { PaginationBtnProps } from "src/components/Pagination/paginationTypes";
 
-const PaginationButton = ({ children, onClick, disabled, pageIndex }: PaginationBtnProps) => {
+export const PaginationButton = ({ children, onClick, disabled, pageIndex }: PaginationBtnProps) => {
     return (
         <Button
             bg="transparent"
@@ -22,5 +21,3 @@ const PaginationButton = ({ children, onClick, disabled, pageIndex }: Pagination
         </Button>
     );
 };
-
-export default PaginationButton;

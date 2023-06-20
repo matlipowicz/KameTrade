@@ -7,11 +7,10 @@ const rangeTest = (start: number, end: number) => {
 
     return Array.from({ length }, (_, idx) => idx + start);
 };
-//TODO: BUGFIX kropki przy powrocie na 1 stronnie znikaja
+
 //TODO: Understand the concept of dots in pagination
 const firstPageIndex = 1;
-//! Pagination hook --> move as separate component
-//! ADAM WYTLUMACZY --> PAMIETAJ ADAM
+
 export const usePagination = ({ totalCount, pageSize, siblingCount = 1, currPage }: PaginationHookProps) =>
     useMemo(() => {
         const totalPages = Math.ceil(totalCount / pageSize);

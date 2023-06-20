@@ -1,12 +1,10 @@
 import { SimpleGrid, Box, Image, Text, Button, Heading } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import graph from "src/assets/miscellaneous/About-graphics.svg";
+import { RedGradientBtn } from "src/components/Buttons/RedGradientBtn";
 
 const About = () => {
     return (
-        // <Flex minHeight="100vh" alignItems={"center"} justifyContent={"center"}>
-        //     About
-        // </Flex>
         <SimpleGrid columns={2} spacing={5} minChildWidth={"35rem"} p={"5rem"}>
             <Box h={"70dvh"} display="flex" justifyContent="center" alignItems="center" p={{ base: "2.5rem", lg: "4rem" }}>
                 <Image src={graph} alt="App graphic" w="60rem" />
@@ -29,25 +27,12 @@ const About = () => {
                     labore. Reprehenderit obcaecati, repudiandae cum ipsam libero accusamus incidunt labore.
                 </Text>
                 <Box>
-                    <Button
-                        size="lg"
-                        p={{ base: "2rem", md: "2.5rem" }}
-                        bgGradient="linear(to-r,addition.400,addition.500)"
-                        fontSize={"2rem"}
-                        color={"background.800"}
-                        borderWidth={"0.2rem"}
-                        borderColor="addition.400"
-                        _hover={{ bg: "transparent", color: "addition.500" }}
-                        variant="unstyled"
-                        display="flex"
-                        transition={"0.2s all"}
-                    >
-                        <Link to="/browse">Search for assets</Link>
-                    </Button>
+                    <Link to="/browse">
+                        <RedGradientBtn>Search for assets</RedGradientBtn>
+                    </Link>
                 </Box>
             </Box>
         </SimpleGrid>
     );
 };
-
 export default About;

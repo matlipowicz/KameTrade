@@ -1,31 +1,13 @@
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { ButtonGroup } from "@chakra-ui/react";
+import { BlueBtn } from "../Buttons/BlueBtn";
+import { PurpleBtn } from "../Buttons/PurpleBtn";
 
-export const Buttons = () => {
+export const ButtonContainer = () => {
     return (
         <>
             <ButtonGroup spacing={"1rem"} flexWrap={"wrap"}>
-                <Button
-                    bg="addition.800"
-                    _hover={{ backgroundColor: "addition.700" }}
-                    borderColor="addition.800"
-                    borderWidth={"0.2rem"}
-                    size="lg"
-                    fontSize={"2rem"}
-                    p={{ base: "2rem", md: "2.5rem" }}
-                >
-                    Sign up
-                </Button>
-                <Button
-                    borderColor="addition.600"
-                    borderWidth={"0.2rem"}
-                    _hover={{ backgroundColor: "addition.600", color: "text.900" }}
-                    variant="outline"
-                    size="lg"
-                    fontSize={"2rem"}
-                    p={{ base: "2rem", md: "2.5rem" }}
-                >
-                    Sign in
-                </Button>
+                <PurpleBtn>Sign up</PurpleBtn>
+                <BlueBtn>Sign in</BlueBtn>
             </ButtonGroup>
         </>
     );

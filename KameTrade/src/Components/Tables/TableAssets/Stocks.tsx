@@ -2,16 +2,18 @@ import { useGetStockListQuery, useGetStockLastQuoteQuery } from "src/redux/store
 import { useGetStockTotalPriceQuery } from "src/redux/store/slices/stockYahoo";
 import { useSelector } from "react-redux";
 import { useReactTable, getCoreRowModel, getPaginationRowModel, getSortedRowModel } from "@tanstack/react-table";
-import { StockBody } from "../TableBody/stockBody";
-import { StockColumns } from "../ColumnsDef/stockColumns";
-import { Box, Thead, Tbody, Table, Tr, Td, Th, HStack, chakra } from "@chakra-ui/react";
+import { Box, Table, HStack } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import { flexRender } from "@tanstack/react-table";
 import { RootState } from "src/redux/store/rootStore";
-import { RowSelector } from "../RowSelector";
-import TablePagination from "src/Components/Pagination/TablePagination";
+import { RowSelector } from "src/components/Tables/RowSelector";
+import { TablePagination } from "src/components/Pagination/TablePagination";
+import { TableSpinner } from "src/components/Tables/LoadingData/TableSpinner";
+import { TableHead } from "src/components/Tables/TableElements/TableHead";
+import { TableBody } from "src/components/Tables/TableElements/TableBody";
+import { StockColumns } from "src/components/Tables/ColumnsDef/StockColumns";
 
-export const Stocks = () => {
+export const Stocks = (query: { query: string }) => {
     const { data: stocksList } = useGetStockListQuery();
     const { data: stockDetail } = useGetStockLastQuoteQuery({ symbol: "AAPL", interval: "1day" });
     const { data: stockStatistic } = useGetStockTotalPriceQuery("AAPL");
@@ -24,7 +26,7 @@ export const Stocks = () => {
     });
     const stockTable = useReactTable({
         columns: StockColumns,
-        data: stockListData,
+        data: stockListData!,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -34,55 +36,13 @@ export const Stocks = () => {
         <>
             <Box w="100%">
                 <Table bg="rgba(0,0,0,0.16)" backdropFilter="blur(1rem)" boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)">
-                    <Thead position="relative">
-                        {stockTable.getHeaderGroups().map((headerGroup) => {
-                            return (
-                                <Tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <Th
-                                                key={header.id}
-                                                onClick={header.column.getToggleSortingHandler()}
-                                                fontSize="1.8rem"
-                                                fontWeight={700}
-                                                lineHeight="2rem"
-                                                p="2.5rem "
-                                                color="addition.600"
-                                                bg={"addition.700"}
-                                                _hover={{ bg: "addition.800", cursor: "pointer" }}
-                                                position="sticky"
-                                                top="13.4rem"
-                                            >
-                                                <HStack display="flex" justifyContent="space-between" alignItems="center">
-                                                    <Box w="fit-content">
-                                                        {flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead table={stockTable} />
 
-                                                        <Box position="absolute" right="6" top="50%" transform="translate(0%,-50%)">
-                                                            <chakra.span position="relative" bottom="0.2rem">
-                                                                {header.column.getIsSorted() ? (
-                                                                    header.column.getIsSorted() === "desc" ? (
-                                                                        <ArrowDownIcon color="addition.150" />
-                                                                    ) : (
-                                                                        <ArrowUpIcon color="addition.150" />
-                                                                    )
-                                                                ) : null}
-                                                            </chakra.span>
-                                                        </Box>
-                                                    </Box>
-                                                </HStack>
-                                            </Th>
-                                        );
-                                    })}
-                                </Tr>
-                            );
-                        })}
-                    </Thead>
-
-                    <StockBody stockListData={stockListData} table={stockTable} columnQuantity={columnQuantity} />
+                    {stockListData !== undefined ? <TableBody table={stockTable} query={query} /> : <TableSpinner columnQuantity={columnQuantity} />}
                 </Table>
 
                 {stockListData && (
-                    <HStack display="flex" alignItems="center" justifyContent="space-between" mt="3rem" w="100%">
+                    <HStack display="flex" alignItems="center" justifyContent="space-between" mt="3rem">
                         <RowSelector table={stockTable} />
                         <TablePagination table={stockTable} data={stockListData} />
                     </HStack>

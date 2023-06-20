@@ -1,44 +1,16 @@
-import { useState, useRef, ReactElement } from "react";
-import logo from "src/assets/logo/Dark-version.svg";
+import { useRef } from "react";
 import { Box, Flex, Drawer, DrawerBody, DrawerFooter, DrawerOverlay, DrawerContent, DrawerCloseButton, Button, Hide } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
-import { Buttons } from "./Buttons";
-import { NavBar } from "./NavElements";
+import { ButtonContainer } from "src/components/Nav/Buttons";
+import { NavBar } from "src/components/Nav/NavElements";
+
 // TODO: React icons for mobile navbar
 
-const SideNav = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    // TODO: Make slide menu
-    // if (!isOpen) {
-    //     return null;
-    // }
-
+export const SideNav = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
     const btnRef = useRef<any>();
 
     return (
         <>
-            {/* MY VERSION */}
-            {/* <Box
-                bg={"addition.800"}
-                h={"100vh"}
-                w={"50rem"}
-                display={isOpen ? { base: "flex", xl: "none" } : { base: "none", xl: "none" }}
-                pos={{ base: "fixed" }}
-                top="0"
-                right="0"
-            >
-                <Flex minWidth="max-content" alignItems="end" gap="2" p={"4rem"} justifyContent="space-between" flexDirection="column" h={"100%"}>
-                    <div onClick={onClose}>
-                        <CloseIcon _hover={{ cursor: "pointer" }} />
-                    </div>
-                    <Flex gap={"2rem"} flexDir="column">
-                        <NavBar />
-                    </Flex>
-                    <Buttons />
-                </Flex>
-            </Box> */}
-
-            {/* CHAKRA VERSION */}
             <Hide above="xl">
                 <Drawer isOpen={isOpen} onClose={onClose} onEsc={onClose} placement="right" finalFocusRef={btnRef} size={{ base: "md", lg: "lg" }}>
                     <DrawerOverlay />
@@ -52,7 +24,7 @@ const SideNav = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
                             </Flex>
                         </DrawerBody>
                         <DrawerFooter>
-                            <Buttons />
+                            <ButtonContainer />
                         </DrawerFooter>
                     </DrawerContent>
                 </Drawer>
@@ -60,5 +32,3 @@ const SideNav = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
         </>
     );
 };
-
-export default SideNav;
