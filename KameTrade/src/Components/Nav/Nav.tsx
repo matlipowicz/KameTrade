@@ -3,13 +3,14 @@ import logo from "src/assets/logo/Dark-version.svg";
 import { Box, Flex, Spacer, Text, HStack, useDisclosure, IconButton } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { Buttons } from "./Buttons";
-import { NavBar } from "./NavElements";
-import SideNav from "./SideNav";
+import { ButtonContainer } from "src/components/Nav/Buttons";
+
+import { NavBar } from "src/components/Nav/NavElements";
+import { SideNav } from "src/components/Nav/SideNav";
 
 // TODO: React icons for mobile navbar
 
-const Navigation = () => {
+export const Navigation = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [color, setColor] = useState<boolean>(false);
 
@@ -34,8 +35,6 @@ const Navigation = () => {
                 justifyContent="space-between"
                 as="header"
                 zIndex="1"
-                // position="sticky"
-                // top="0"
                 bg={color ? "rgba(40,40,60,0.5)" : "none"}
                 backdropFilter="blur(1.5rem)"
             >
@@ -47,7 +46,7 @@ const Navigation = () => {
 
                 <Flex gap={"5rem"} display={{ base: "none", xl: "flex" }}>
                     <NavBar />
-                    <Buttons />
+                    <ButtonContainer />
                 </Flex>
 
                 <SideNav isOpen={isOpen} onClose={onClose} />
@@ -56,5 +55,3 @@ const Navigation = () => {
         </>
     );
 };
-
-export default Navigation;

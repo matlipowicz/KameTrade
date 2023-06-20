@@ -1,5 +1,4 @@
 import { Flex } from "@chakra-ui/react";
-
 const SymulateInvest = () => {
     return (
         <Flex minHeight="100vh" alignItems={"center"} justifyContent={"center"}>
@@ -7,5 +6,4 @@ const SymulateInvest = () => {
         </Flex>
     );
 };
-
 export default SymulateInvest;

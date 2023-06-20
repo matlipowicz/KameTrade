@@ -9,7 +9,7 @@ if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
     throw new Error("Please provide api key");
 }
 const cryptoHeaders = {
-    "X-RapidAPI-Key": "3467572494mshba02a5032e24b90p1715eajsn7205b51bd707",
+    "X-RapidAPI-Key": import.meta.env.VITE_COINRANKING_API_KEY,
     "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
 };
 
@@ -37,6 +37,10 @@ export const coinApi = createApi({
         getHistoricalCoinData: builder.query<RootHistory, HistoricalArguments>({
             query: ({ uuid, timePeriod }) => makeRequest(`/coin/${uuid}/history?timePeriod=${timePeriod}`),
         }),
+        getOHLCData: builder.query<any, any>({
+            query: ({ uuid, timePeriod, limit }) =>
+                makeRequest(`https://coinranking1.p.rapidapi.com/coin/${uuid}/ohlc?interval=${timePeriod}&limit=${limit}`),
+        }),
     }),
 });
 
@@ -44,3 +48,4 @@ export const { useGetCoinsDataQuery } = coinApi;
 export const { useGetHistoricalCoinDataQuery } = coinApi;
 export const { useGetCoinDetailsQuery } = coinApi;
 export const { useGetCoinPriceQuery } = coinApi;
+export const { useGetOHLCDataQuery } = coinApi;

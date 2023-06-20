@@ -14,7 +14,7 @@ export const colors = {
     addition: {
         100: "#F4C109",
         150: "#F4BD5A",
-        175: " #F3AE5F",
+        175: "#F3AE5F",
         185: "#F89F5B",
         200: "#7DBC3F",
         250: "#324b19",

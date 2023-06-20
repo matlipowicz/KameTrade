@@ -11,7 +11,7 @@ const ICONS = [
     { icon: <IoIosMail />, href: "mailto:matlipowicz@gmail.com" },
 ];
 
-const Footer = () => {
+export const Footer = () => {
     return (
         <>
             <Flex as="footer" alignItems="center" justifyContent="space-between" p="6rem" gap="10rem" bg="rgba(0,0,0,0.1)" w="100%">
@@ -49,5 +49,3 @@ const Footer = () => {
         </>
     );
 };
-
-export default Footer;

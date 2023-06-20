@@ -1,4 +1,3 @@
-import { NavLinkProps } from "./types";
 import { NavLink as RouterLink } from "react-router-dom";
 import { HStack, Link as ChakraNavLink, Text } from "@chakra-ui/react";
 

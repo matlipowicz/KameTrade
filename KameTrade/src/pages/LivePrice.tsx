@@ -1,5 +1,4 @@
 import { Flex } from "@chakra-ui/react";
-import { useGetCoinsDataQuery } from "src/redux/store/slices/coinSlice";
 
 const LivePrice = () => {
     return (

@@ -4,24 +4,24 @@ import { ChakraProvider, Heading } from "@chakra-ui/react";
 import { theme } from "./theme/theme.ts";
 import "@fontsource/saira/200.css";
 import "@fontsource/saira/700.css";
-import Navigation from "./Components/Nav/Nav.tsx";
-import Footer from "./Components/Footer/Footer.tsx";
+import { Navigation } from "./components/Nav/Nav.tsx";
+import { Footer } from "./components/Footer/Footer.tsx";
 import { About, Browse, LivePrice, Profile, SymulateInvest } from "./pages/index";
-import { CoinDetails } from "./Components/AssetDetails/CoinDetails.tsx";
-import { StockDetails } from "./Components/AssetDetails/StockDetail";
-import GridLayout from "./layouts/Grid.tsx";
+import { CoinDetails } from "./components/AssetDetails/CoinDetails.tsx";
+import { StockDetails } from "./components/AssetDetails/StockDetail.tsx";
+import { GridLayout } from "./layouts/Grid.tsx";
 import { GridItem } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
 
 // TODO: Lazy loading
 
-function App() {
+export function App() {
     return (
         <>
             <BrowserRouter>
                 <ChakraProvider theme={theme}>
                     <GridLayout>
-                        <GridItem colSpan={2} position="sticky" top="0" zIndex={1000}>
+                        <GridItem colSpan={2} position="sticky" top="0" zIndex={1000} alignSelf={"start"}>
                             <Navigation />
                         </GridItem>
 
@@ -29,7 +29,7 @@ function App() {
                             <Route
                                 path="/"
                                 element={
-                                    <GridItem colSpan={2} alignSelf="start">
+                                    <GridItem colSpan={{ base: 1, lg: 2 }} alignSelf="start">
                                         <About />
                                     </GridItem>
                                 }
@@ -38,7 +38,7 @@ function App() {
                                 <Route
                                     index
                                     element={
-                                        <GridItem colSpan={2} rowSpan={2}>
+                                        <GridItem colSpan={{ base: 1, lg: 2 }}>
                                             <Browse />
                                         </GridItem>
                                     }
@@ -56,7 +56,7 @@ function App() {
                             <Route path="/symulate_investment" element={<SymulateInvest />} />
                         </Routes>
 
-                        <GridItem colSpan={2}>
+                        <GridItem colSpan={2} alignSelf="end">
                             <Footer />
                         </GridItem>
                     </GridLayout>
@@ -65,5 +65,3 @@ function App() {
         </>
     );
 }
-
-export default App;

@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store/rootStore";
 import { Box, FormControl, FormLabel, Input, Flex } from "@chakra-ui/react";
-import { AssetTabs } from "src/Components/Tables/AssetTabs";
+import { AssetTabs } from "src/components/Tables/AssetTabs";
 import { Coins } from "./TableAssets/Coins";
 import { Stocks } from "./TableAssets/Stocks";
-import { Filter } from "./TableAssets/Coins";
+// import { Filter } from "./TableAssets/Coins";
 
 // TODO: errors + coinsData types + shrink size of code lines to smaller chunks
 // TODO: Set type for coinsData
@@ -18,7 +18,18 @@ export function BrowseTable() {
 
     return (
         <>
-            <Box display="flex" justifyContent="center" alignItems="center" flexDir="column" p="8rem 12rem" as="section" position="relative">
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDir="column"
+                paddingTop="clamp(6rem,6vh,10rem)"
+                paddingBottom="clamp(6rem,6vh,10rem)"
+                paddingRight="clamp(6rem,10vh,12rem)"
+                paddingLeft="clamp(6rem,10vh,12rem)"
+                as="section"
+                position="relative"
+            >
                 <Flex w="100%" justifyContent="space-between" flexDir="row">
                     <Box>
                         <AssetTabs />
