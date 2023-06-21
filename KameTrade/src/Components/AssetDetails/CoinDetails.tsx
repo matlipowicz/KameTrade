@@ -10,8 +10,10 @@ import { RedGradientBtn } from "../Buttons/RedGradientBtn";
 import { CandleChart } from "../Chart/CandleChart";
 import { PurpleBtn } from "../Buttons/PurpleBtn";
 import { ButtonGroup } from "@chakra-ui/react";
+import { ChartButton } from "../Buttons/ChartButton";
 
 import { MdOutlineAreaChart, MdOutlineCandlestickChart } from "react-icons/md";
+import { AssetStatistics } from "./AssetStatistics";
 
 // TODO: Fix issue with to large amount of data logged to the console
 
@@ -40,6 +42,7 @@ export const CoinDetails = () => {
     // TODO: inactive button when user not logged in
     // TODO: create small chunks of codes, shrink them to several components
     //! TODO: prevent chart from rendering whole page!
+    //! TODO: try to clear previous chart and create new one after data change
 
     return (
         <>
@@ -120,52 +123,22 @@ export const CoinDetails = () => {
                     </Box>
                 </GridItem>
                 <GridItem colSpan={{ base: 1, lg: 2 }}>
-                    <Box display="flex" flexDir="column" gap="3rem">
-                        <Heading size="3xl" color="addition.800">
-                            Key statistics
-                        </Heading>
-
-                        <Box
-                            display="grid"
-                            gridTemplateColumns={{ base: "1fr", md: "repeat(2,1fr)", lg: "repeat(3,1fr)", xl: "repeat(4,1fr)" }}
-                            gap="4rem"
-                            textAlign="left"
-                        >
-                            {details && (
-                                <>
-                                    <Box>
-                                        <Heading size="lg">Market Capitalization</Heading>
-                                        <Text>{millify(Number(details?.marketCap as string), { precision: 3 })}</Text>
-                                    </Box>
-                                    <Box>
-                                        <Heading size="lg">Dilluted Market Cap</Heading>
-                                        <Text>{millify(Number(details?.fullyDilutedMarketCap as string), { precision: 3 })}</Text>
-                                    </Box>
-                                    <Box>
-                                        <Heading size="lg">Volume 24h</Heading>
-                                        <Text>{millify(Number(details?.["24hVolume"] as string), { precision: 3 })}</Text>
-                                    </Box>
-                                    <Box>
-                                        <Heading size="lg">Circulating supply</Heading>
-                                        <Text>{millify(Number(details?.supply.circulating as string), { precision: 3 })}</Text>
-                                    </Box>
-                                </>
-                            )}
-                        </Box>
-                    </Box>
-                </GridItem>
-                <GridItem colSpan={{ base: 1, lg: 2 }}>
                     <VStack>
                         {uuid && (
                             <Box>
-                                <ButtonGroup>
-                                    <Button onClick={() => setChartType("range")}>
-                                        <Icon as={MdOutlineAreaChart} />
-                                    </Button>
-                                    <Button onClick={() => setChartType("candle")}>
-                                        <Icon as={MdOutlineCandlestickChart} color={"red"} />
-                                    </Button>
-                                </ButtonGroup>
+                                <Flex justifyContent="space-between" alignItems="center" mb="1.5rem">
+                                    <ButtonGroup borderWidth="0.01rem" borderRadius="0.375rem" p="0.5rem" borderColor="background.600">
+                                        <ChartButton onClick={() => setChartType("range")} chartType={chartType} id="range">
+                                            <Icon as={MdOutlineAreaChart} color="addition.500" w="2.5rem" h="2.5rem" />
+                                        </ChartButton>
+                                        <ChartButton onClick={() => setChartType("candle")} chartType={chartType} id="candle">
+                                            <Icon as={MdOutlineCandlestickChart} color="addition.500" w="2.5rem" h="2.5rem" />
+                                        </ChartButton>
+                                    </ButtonGroup>
+                                    <Box>
+                                        <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
+                                    </Box>
+                                </Flex>
                                 {chartType === "range" ? (
                                     <RangeChart uuid={uuid} timePeriod={historyPeriod} />
                                 ) : (
@@ -177,9 +150,9 @@ export const CoinDetails = () => {
                 </GridItem>
 
                 <GridItem colSpan={{ base: 1, lg: 2 }}>
-                    <VStack>
-                        <Box>Table</Box>
-                    </VStack>
+                    <Box>
+                        <AssetStatistics details={details} currentPrice={price} />
+                    </Box>
                 </GridItem>
             </Grid>
         </>
