@@ -3,13 +3,14 @@ import { flexRender } from "@tanstack/react-table";
 import { Coin, Coins } from "src/redux/sliceTypes";
 import { Table } from "@tanstack/react-table";
 
-export const TableBody = <T extends { name: string }>({ table, query }: { table: Table<T>; query: string }) => {
+export const TableBody = <T extends { name: string }>({ table }: { table: Table<T> }) => {
+    // TODO: Change index key to other unique value
     return (
         <>
             <Tbody maxW="120rem">
-                {table.getRowModel().rows.map((row) => {
+                {table.getRowModel().rows.map((row, index) => {
                     return (
-                        <Tr key={row.original.name} maxH="min-content" _hover={{ bg: "background.500" }} lineHeight="30rem">
+                        <Tr key={index} maxH="min-content" _hover={{ bg: "background.500" }} lineHeight="30rem">
                             {row.getVisibleCells().map((cell, index) => {
                                 return (
                                     <Td key={index} lineHeight="2rem" textAlign="center">

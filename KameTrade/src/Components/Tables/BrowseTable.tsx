@@ -5,14 +5,16 @@ import { Box, FormControl, FormLabel, Input, Flex } from "@chakra-ui/react";
 import { AssetTabs } from "src/components/Tables/AssetTabs";
 import { Coins } from "./TableAssets/Coins";
 import { Stocks } from "./TableAssets/Stocks";
+
 // import { Filter } from "./TableAssets/Coins";
 
 // TODO: errors + coinsData types + shrink size of code lines to smaller chunks
 // TODO: Set type for coinsData
 
 export function BrowseTable() {
-    const [query, setQuery] = useState<string>("");
-    let assetType = useSelector((state: RootState) => {
+    const [cryptoGlobalFilter, setCryptoGlobalFilter] = useState("");
+    const [stockGlobalFilter, setStockGlobalFilter] = useState("");
+    let assetType: any = useSelector((state: RootState) => {
         return state.tabs.assetType;
     });
 
@@ -34,17 +36,21 @@ export function BrowseTable() {
                     <Box>
                         <AssetTabs />
                     </Box>
-                    <Box as="form" display="flex" alignItems="center" gap="1rem">
+                    {/* <Box as="form" display="flex" alignItems="center" gap="1rem">
                         <FormLabel fontSize="1.6rem">Search</FormLabel>
                         <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} h="100%" maxW="20rem" fontSize="1.6rem" />
-                    </Box>
+                    </Box> */}
                 </Flex>
 
                 <Box w="100%">
                     {assetType === "coin-tab" ? (
-                        <Coins query={query} />
+                        <Coins globalFilter={cryptoGlobalFilter} setGlobalFilter={setCryptoGlobalFilter} />
                     ) : (
-                        (assetType = "stock-tab" ? <Stocks /> : (assetType = "commodity-tab" ? <div>Commodity</div> : <div>No data available</div>))
+                        (assetType = "stock-tab" ? (
+                            <Stocks globalFilter={stockGlobalFilter} setGlobalFilter={setStockGlobalFilter} />
+                        ) : (
+                            <div>No data available</div>
+                        ))
                     )}
                 </Box>
             </Box>
