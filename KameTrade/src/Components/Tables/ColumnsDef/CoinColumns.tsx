@@ -38,6 +38,9 @@ export const CoinColumns = [
                 </HStack>
             );
         },
+        meta: {
+            enableColumnFilters: true,
+        },
     }),
 
     columnHelper.accessor("rank", {
@@ -45,6 +48,7 @@ export const CoinColumns = [
         header: () => "Rank",
         meta: {
             isNumeric: true,
+            enableColumnFilters: true,
         },
     }),
     columnHelper.accessor("price", {
@@ -62,6 +66,7 @@ export const CoinColumns = [
         header: () => "Value",
         meta: {
             isNumeric: true,
+            enableColumnFilters: false,
         },
     }),
     columnHelper.accessor("change", {
@@ -89,6 +94,7 @@ export const CoinColumns = [
         header: () => "Volume 24h",
         meta: {
             isNumeric: true,
+            enableColumnFilters: false,
         },
     }),
     columnHelper.accessor("marketCap", {
@@ -105,6 +111,7 @@ export const CoinColumns = [
         header: () => "Market Cap",
         meta: {
             isNumeric: true,
+            enableColumnFilters: false,
         },
     }),
 ];
