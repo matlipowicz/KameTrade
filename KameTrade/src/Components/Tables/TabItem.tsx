@@ -10,7 +10,7 @@ export const TabItem = ({ onClick, title, id }: { onClick: () => void; title: st
         <>
             <ListItem
                 listStyleType="none"
-                p="1rem 4rem"
+                p="1.5rem 4rem"
                 bg={testTab === id ? "addition.700" : "none"}
                 _hover={{ cursor: "pointer" }}
                 onClick={onClick}

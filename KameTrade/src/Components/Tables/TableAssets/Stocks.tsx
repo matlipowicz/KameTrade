@@ -49,7 +49,7 @@ export const Stocks = ({
     return (
         <>
             <Box w="100%">
-                <DebouncedInput value={globalFilter ?? ""} onChange={(value) => setGlobalFilter(String(value))} placeholder="Enter stock symbol" />
+                {/* <DebouncedInput value={globalFilter ?? ""} onChange={(value) => setGlobalFilter(String(value))} placeholder="Enter stock symbol" /> */}
                 <Table bg="rgba(0,0,0,0.16)" backdropFilter="blur(1rem)" boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)">
                     <TableHead table={stockTable} />
 

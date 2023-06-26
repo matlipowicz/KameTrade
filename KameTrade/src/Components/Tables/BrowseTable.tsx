@@ -5,11 +5,13 @@ import { Box, FormControl, FormLabel, Input, Flex } from "@chakra-ui/react";
 import { AssetTabs } from "src/components/Tables/AssetTabs";
 import { Coins } from "./TableAssets/Coins";
 import { Stocks } from "./TableAssets/Stocks";
+import { DebouncedInput } from "./Filter/DebouncedInput";
 
 // import { Filter } from "./TableAssets/Coins";
 
 // TODO: errors + coinsData types + shrink size of code lines to smaller chunks
 // TODO: Set type for coinsData
+// TODO: Responsive table
 
 export function BrowseTable() {
     const [cryptoGlobalFilter, setCryptoGlobalFilter] = useState("");
@@ -32,25 +34,32 @@ export function BrowseTable() {
                 as="section"
                 position="relative"
             >
-                <Flex w="100%" justifyContent="space-between" flexDir="row">
-                    <Box>
+                <Flex w="100%" justifyContent="space-between" alignItems="center">
+                    <Box h="100%">
                         <AssetTabs />
                     </Box>
-                    {/* <Box as="form" display="flex" alignItems="center" gap="1rem">
-                        <FormLabel fontSize="1.6rem">Search</FormLabel>
-                        <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} h="100%" maxW="20rem" fontSize="1.6rem" />
-                    </Box> */}
+                    <Box alignSelf="end">
+                        {assetType === "coin-tab" ? (
+                            <DebouncedInput
+                                value={cryptoGlobalFilter ?? ""}
+                                onChange={(value) => setCryptoGlobalFilter(String(value))}
+                                placeholder="Enter token name"
+                            />
+                        ) : assetType === "stock-tab" ? (
+                            <DebouncedInput
+                                value={stockGlobalFilter ?? ""}
+                                onChange={(value) => setStockGlobalFilter(String(value))}
+                                placeholder="Enter stock symbol"
+                            />
+                        ) : null}
+                    </Box>
                 </Flex>
 
                 <Box w="100%">
                     {assetType === "coin-tab" ? (
                         <Coins globalFilter={cryptoGlobalFilter} setGlobalFilter={setCryptoGlobalFilter} />
                     ) : (
-                        (assetType = "stock-tab" ? (
-                            <Stocks globalFilter={stockGlobalFilter} setGlobalFilter={setStockGlobalFilter} />
-                        ) : (
-                            <div>No data available</div>
-                        ))
+                        (assetType = "stock-tab" ? <Stocks globalFilter={stockGlobalFilter} setGlobalFilter={setStockGlobalFilter} /> : null)
                     )}
                 </Box>
             </Box>

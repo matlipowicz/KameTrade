@@ -17,6 +17,9 @@ const chartOptions = {
         vertLine: { labelBackgroundColor: "#F89F5B" },
         horzLine: { labelBackgroundColor: "#F89F5B" },
     },
+    timeScale: {
+        timeVisible: true,
+    },
 
     innerWidth: "100px",
     innerHeight: "100px",
