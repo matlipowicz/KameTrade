@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, ISeriesApi, Time } from "lightweight-charts";
 import { Box } from "@chakra-ui/react";
-import { useGetOHLCDataQuery } from "src/redux/store/slices/coinSlice";
+import { useGetHistoryDataQuery } from "src/redux/store/slices/stockTwelve";
+import { UTCTimestamp } from "lightweight-charts";
 
 // TODO: Dopracuj wykresy, aby przy każdej zmianie okresu zmieniały się jednocześnie
 
@@ -27,55 +28,60 @@ const chartOptions = {
     innerHeight: "100px",
 };
 
-export const CandleChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: string }) => {
+export const CandleStockChart = ({ id, timePeriod }: { id: string; timePeriod: string }) => {
     const candleChartContainer = useRef<HTMLDivElement | null>(null);
     const [currentCandleChart, setCandleChart] = useState<ISeriesApi<"Candlestick"> | null>(null);
-    const [ohlcPeriod, setOhlcPeriod] = useState<any>({ uuid: uuid, timePeriod: "minute", limit: "1440" });
+    const [ohlcPeriod, setOhlcPeriod] = useState<any>({ symbol: id, interval: "1min", outputsize: 389 });
 
-    //! OHLC data call
-    const { data: ohlcData, isLoading: ohlcDataLoading } = useGetOHLCDataQuery(ohlcPeriod);
-    const candleStickData = ohlcData?.data.ohlc;
+    const {
+        data: historyPrice,
+        isLoading: historyPriceLoading,
+        error: historyPriceError,
+    } = useGetHistoryDataQuery(ohlcPeriod, { skip: !id || !timePeriod });
 
-    const mappedCandleStickData = candleStickData?.map((data: any) => {
+    const historyData = historyPrice?.values;
+
+    const mappedCandleStickData = historyData?.map((data: any) => {
         return {
-            time: data.endingAt,
+            time: (Date.parse(data.datetime) / 1000) as UTCTimestamp,
             open: Number(data.open),
             high: Number(data.high),
             low: Number(data.low),
             close: Number(data.close),
         };
     });
-    const candleChartData = mappedCandleStickData?.sort((a: any, b: any) => (a.time as number) - (b.time as number));
+
+    const candleChartData = mappedCandleStickData?.sort((a, b) => a.time - b.time);
 
     useEffect(() => {
         switch (timePeriod) {
             case "24h":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "minute", limit: "1440" });
+                setOhlcPeriod({ symbol: id, interval: "1min", outputsize: 389 });
                 break;
             case "7d":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "hour", limit: "168" });
+                setOhlcPeriod({ symbol: id, interval: "5min", outputsize: 389 });
                 break;
             case "30d":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "hour", limit: "720" });
+                setOhlcPeriod({ symbol: id, interval: "30min", outputsize: 246 });
                 break;
             case "3m":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "8hours", limit: "272" });
+                setOhlcPeriod({ symbol: id, interval: "1day", outputsize: 63 });
                 break;
             case "1y":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "day", limit: "365" });
+                setOhlcPeriod({ symbol: id, interval: "1week", outputsize: 53 });
                 break;
             case "3y":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "day", limit: "1097" });
+                setOhlcPeriod({ symbol: id, interval: "1week", outputsize: 158 });
                 break;
             case "5y":
-                setOhlcPeriod({ uuid: uuid, timePeriod: "day", limit: "1827" });
+                setOhlcPeriod({ symbol: id, interval: "1week", outputsize: 262 });
         }
     }, [timePeriod]);
 
     //! Coin history price call
 
     useEffect(() => {
-        if (candleChartContainer && candleChartData && !ohlcDataLoading) {
+        if (candleChartContainer && candleChartData && !historyPriceLoading) {
             if (currentCandleChart) {
                 currentCandleChart.setData(candleChartData);
             } else {

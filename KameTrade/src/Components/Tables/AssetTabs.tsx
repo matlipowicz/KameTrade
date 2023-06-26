@@ -11,7 +11,6 @@ export const AssetTabs = () => {
             <UnorderedList display="flex" bg="rgba(0,0,0,0.16)" w="min-content" marginLeft="0">
                 <TabItem onClick={() => dispatch(assetActions.handleTabChange("coin-tab"))} title={"Coins"} id="coin-tab" />
                 <TabItem onClick={() => dispatch(assetActions.handleTabChange("stock-tab"))} title={"Stocks"} id="stock-tab" />
-                {/* <TabItem onClick={() => dispatch(assetActions.handleTabChange("commodity-tab"))} title={"Commodity"} id="commodity-tab" /> */}
             </UnorderedList>
         </>
     );

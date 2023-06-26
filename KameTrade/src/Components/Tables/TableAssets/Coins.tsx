@@ -45,8 +45,6 @@ export const Coins = ({ globalFilter, setGlobalFilter }: { globalFilter: string;
     return (
         <>
             <Box>
-                <DebouncedInput value={globalFilter ?? ""} onChange={(value) => setGlobalFilter(String(value))} placeholder="Enter token name" />
-
                 <Table bg="rgba(0,0,0,0.16)" backdropFilter="blur(1rem)" boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)">
                     <TableHead table={coinTable} />
 

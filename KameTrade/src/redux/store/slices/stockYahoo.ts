@@ -20,7 +20,11 @@ export const stockYahooApi = createApi({
         getStockTotalPrice: builder.query<YahooRootObject, string>({
             query: (symbol) => makeRequest(`/qu/quote/${symbol}/default-key-statistics`),
         }),
+        getStockProfile: builder.query<any, string>({
+            query: (symbol) => makeRequest(`https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/${symbol}/asset-profile`),
+        }),
     }),
 });
 
 export const { useGetStockTotalPriceQuery } = stockYahooApi;
+export const { useGetStockProfileQuery } = stockYahooApi;
