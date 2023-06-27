@@ -11,9 +11,11 @@ import { CandleChart } from "../Chart/CandleChart";
 import { PurpleBtn } from "../Buttons/PurpleBtn";
 import { ButtonGroup } from "@chakra-ui/react";
 import { ChartButton } from "../Buttons/ChartButton";
-
 import { MdOutlineAreaChart, MdOutlineCandlestickChart } from "react-icons/md";
-import { AssetStatistics } from "./AssetStatistics";
+import { AssetStatistics } from "./CoinStatistics";
+import { coinDetails, coinPrice } from "src/api/crypto";
+import { useQuery } from "@tanstack/react-query";
+import { historyCoinData } from "src/api/crypto";
 
 // TODO: Fix issue with to large amount of data logged to the console
 
@@ -24,14 +26,27 @@ export const CoinDetails = () => {
     const periods = ["24h", "7d", "30d", "3m", "1y", "3y", "5y"];
 
     //! Coin current price call
+
     const {
         data: coin,
-        isFetching: coinDetailFetching,
+        isLoading: coinDetailLoading,
         error: coinDetailError,
-    } = useGetCoinDetailsQuery({ uuid: uuid as string, timePeriod: historyPeriod });
-    const { data: coinPrice, isFetching: coinPriceFetching, error: coinPriceError } = useGetCoinPriceQuery(uuid as string);
+    } = useQuery({
+        queryKey: ["coin", { uuid: uuid, timePeriod: historyPeriod }],
+        queryFn: () => coinDetails({ uuid: uuid as string, timePeriod: historyPeriod }),
+        staleTime: 1000,
+    });
+    const {
+        data: coinCurrentPrice,
+        isLoading: coinPriceDetailLoading,
+        error: coinPriceDetailError,
+    } = useQuery({
+        queryKey: ["coinPrice", { uuid: uuid }],
+        queryFn: () => coinPrice(uuid as string),
+        staleTime: 1000,
+    });
 
-    const price = coinPrice?.data?.price;
+    const price = coinCurrentPrice?.data?.price;
     const details = coin?.data?.coin;
 
     function historyHandleChange(e: ChangeEvent<HTMLSelectElement>) {

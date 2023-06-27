@@ -1,16 +1,30 @@
 import { Box, Text, Icon, chakra, Table, Tbody, Tr, Th, Td, Link, Flex, Heading } from "@chakra-ui/react";
 import { AiOutlineTrophy, AiOutlineDollar } from "react-icons/ai";
 import { MdOutlineQueryStats } from "react-icons/md";
-import { FaRegHandshake, FaTelegramPlane, FaReddit, FaGithub, FaBitcoin, FaRegFilePdf } from "react-icons/fa";
+import {
+    FaRegHandshake,
+    FaTelegramPlane,
+    FaReddit,
+    FaGithub,
+    FaBitcoin,
+    FaRegFilePdf,
+    FaYoutube,
+    FaTwitter,
+    FaDiscord,
+    FaMedium,
+    FaInstagram,
+    FaFacebook,
+} from "react-icons/fa";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { IoLinkSharp, IoCubeOutline } from "react-icons/io5";
 import { Coin } from "src/redux/sliceTypes";
 import millify from "millify";
 import { useState, useEffect } from "react";
 
+//TODO: Simplify icon rendering in statistic table (map data for example)
+
 export const AssetStatistics = ({ details, currentPrice }: { details: Coin | undefined; currentPrice: string | undefined }) => {
     const [date, setDate] = useState<string>("");
-    console.log(details);
 
     useEffect(() => {
         if (details !== undefined) {
@@ -83,7 +97,7 @@ export const AssetStatistics = ({ details, currentPrice }: { details: Coin | und
                 <Table w="100%">
                     <Tbody>
                         {details?.links.map((link: any) => (
-                            <Tr key={link.name}>
+                            <Tr key={link.url}>
                                 <Td>
                                     {link.type === "website" ? (
                                         <Icon as={IoLinkSharp} />
@@ -99,6 +113,18 @@ export const AssetStatistics = ({ details, currentPrice }: { details: Coin | und
                                         <Icon as={FaTelegramPlane} />
                                     ) : link.type === "whitepaper" ? (
                                         <Icon as={FaRegFilePdf} />
+                                    ) : link.type === "youtube" ? (
+                                        <Icon as={FaYoutube} />
+                                    ) : link.type === "twitter" ? (
+                                        <Icon as={FaTwitter} />
+                                    ) : link.type === "discord" ? (
+                                        <Icon as={FaDiscord} />
+                                    ) : link.type === "medium" ? (
+                                        <Icon as={FaMedium} />
+                                    ) : link.type === "instagram" ? (
+                                        <Icon as={FaInstagram} />
+                                    ) : link.type === "facebook" ? (
+                                        <Icon as={FaFacebook} />
                                     ) : (
                                         ""
                                     )}

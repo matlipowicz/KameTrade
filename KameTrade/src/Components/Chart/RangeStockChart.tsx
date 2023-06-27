@@ -24,7 +24,7 @@ const chartOptions = {
     innerWidth: "100px",
     innerHeight: "100px",
 };
-
+// TODO: Check other assets if the data for inervarls like 5min are avaiable in every asset
 export const RangeStockChart = ({ id, timePeriod }: { id: string; timePeriod: string }) => {
     const chartContainer = useRef<HTMLDivElement | null>(null);
     const [currentRangeChart, setRangeChart] = useState<ISeriesApi<"Area"> | null>(null);
@@ -34,7 +34,7 @@ export const RangeStockChart = ({ id, timePeriod }: { id: string; timePeriod: st
 
     const historyData = historyPrice?.values;
     //! Mapped price history + sort data in ascending order
-    console.log(historyData);
+
     useEffect(() => {
         switch (timePeriod) {
             case "24h":
@@ -44,7 +44,7 @@ export const RangeStockChart = ({ id, timePeriod }: { id: string; timePeriod: st
                 setOhlcPeriod({ symbol: id, interval: "5min", outputsize: 389 });
                 break;
             case "30d":
-                setOhlcPeriod({ symbol: id, interval: "30min", outputsize: 246 });
+                setOhlcPeriod({ symbol: id, interval: "30min", outputsize: 247 });
                 break;
             case "3m":
                 setOhlcPeriod({ symbol: id, interval: "1day", outputsize: 63 });
@@ -87,7 +87,7 @@ export const RangeStockChart = ({ id, timePeriod }: { id: string; timePeriod: st
             }
         }
     }, [rangeChartData, historyPriceLoading]);
-    // console.log(rangeChartData);
+
     return (
         <>
             <Box

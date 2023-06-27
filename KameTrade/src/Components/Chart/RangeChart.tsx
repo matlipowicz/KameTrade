@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, ISeriesApi, Time } from "lightweight-charts";
 import { Box } from "@chakra-ui/react";
 import { useGetHistoricalCoinDataQuery } from "src/redux/store/slices/coinSlice";
+import { useQuery } from "@tanstack/react-query";
+import { historyCoinData } from "src/api/crypto";
 
 const chartOptions = {
     layout: { textColor: "white", fontFamily: `'Saira', sans-serif`, background: { type: ColorType.Solid, color: "rgba(0,0,0,0.1)" } },
@@ -31,23 +33,32 @@ export const RangeChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: str
 
     //! Coin history price call
 
+    // const {
+    //     data: coinHistory,
+    //     isLoading: coinHistoryLoading,
+    //     error: coinHistoryError,
+    // } = useGetHistoricalCoinDataQuery({ uuid: uuid as string, timePeriod: timePeriod }, { skip: !uuid || !timePeriod });
+
     const {
         data: coinHistory,
         isLoading: coinHistoryLoading,
         error: coinHistoryError,
-    } = useGetHistoricalCoinDataQuery({ uuid: uuid as string, timePeriod: timePeriod }, { skip: !uuid || !timePeriod });
-
+    } = useQuery({
+        queryKey: ["coinHistory", { uuid: uuid, timePeriod: timePeriod }],
+        queryFn: () => historyCoinData({ uuid: uuid as string, timePeriod: timePeriod }),
+        staleTime: 1000,
+    });
     const priceHistory = coinHistory?.data?.history;
 
     //! Mapped price history + sort data in ascending order
-    const mappedPriceHistory = priceHistory?.map((data) => {
+    const mappedPriceHistory = priceHistory?.map((data: any) => {
         return {
             time: data.timestamp as Time,
             value: Number(data.price),
         };
     });
 
-    const rangeChartData = mappedPriceHistory?.sort((a, b) => (a.time as number) - (b.time as number));
+    const rangeChartData = mappedPriceHistory?.sort((a: any, b: any) => (a.time as number) - (b.time as number));
 
     useEffect(() => {
         if (chartContainer && rangeChartData && !coinHistoryLoading) {
