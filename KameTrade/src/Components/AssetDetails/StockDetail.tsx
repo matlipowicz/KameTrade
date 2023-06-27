@@ -33,9 +33,10 @@ import { ButtonGroup } from "@chakra-ui/react";
 import { ChartButton } from "../Buttons/ChartButton";
 
 import { MdOutlineAreaChart, MdOutlineCandlestickChart } from "react-icons/md";
-import { AssetStatistics } from "./AssetStatistics";
+import { AssetStatistics } from "./CoinStatistics";
 import { UnrollBtn } from "../Buttons/UnrollBtn";
 import { CandleStockChart } from "../Chart/CandleStockChart";
+import { StockStatistics } from "./StockStatistics";
 
 // TODO: Create outputsize(period in days to get historical data)
 // TODO:
@@ -48,21 +49,20 @@ export const StockDetails = () => {
     const periods = ["24h", "7d", "30d", "3m", "1y", "3y", "5y"];
 
     const { data: stockLogo, isFetching: stockLogoFetching, error: stockLogoError } = useGetStockLogoQuery(id as string);
-    // const { data: stockProfile, isFetching: stockProfileFetching, error: stockProfileError } = useGetStockProfileQuery(id as string);
-    // const {
-    //     data: stockStatistics,
-    //     isFetching: stockStatisticsFetching,
-    //     error: stockStatisticsError,
-    // } = useGetStockLastQuoteQuery({ symbol: id as string, interval: "1day" });
+    const { data: stockProfile, isFetching: stockProfileFetching, error: stockProfileError } = useGetStockProfileQuery(id as string);
+    const {
+        data: stockStatistics,
+        isFetching: stockStatisticsFetching,
+        error: stockStatisticsError,
+    } = useGetStockLastQuoteQuery({ symbol: id as string, interval: "1day" });
 
-    // const { data: stockTotalPrice, isFetching: stockTotalPriceFetching, error: stockTotalPriceError } = useGetStockTotalPriceQuery(id as string);
+    const { data: stockTotalPrice, isFetching: stockTotalPriceFetching, error: stockTotalPriceError } = useGetStockTotalPriceQuery(id as string);
 
     // Asset info
     const logo = stockLogo?.url;
-    // const profile = stockProfile?.assetProfile;
-    // const statisticData = stockStatistics;
-    // const historyPrice = stockHistory?.values.at(0);
-    // const marketCap = stockTotalPrice?.defaultKeyStatistics.enterpriseValue;
+    const profile = stockProfile?.assetProfile;
+    const statisticData = stockStatistics;
+    const marketCap = stockTotalPrice?.defaultKeyStatistics.enterpriseValue;
 
     function historyHandleChange(e: ChangeEvent<HTMLSelectElement>) {
         const event = e.target;
@@ -71,6 +71,7 @@ export const StockDetails = () => {
 
     // console.log(statisticData);
     // TODO: WORK on Period of data
+
     return (
         <>
             <Grid
@@ -83,9 +84,8 @@ export const StockDetails = () => {
                 <GridItem colSpan={{ base: 1, lg: 2 }} justifySelf="end">
                     <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
                 </GridItem>
-                {/* {statisticData && profile !== undefined ? (
+                {statisticData && profile !== undefined ? (
                     <>
-                        {" "}
                         <GridItem colStart={1} colEnd={2}>
                             <Box display="flex" gap="4rem" as="section" mb={{ base: "3rem", lg: "6rem" }}>
                                 <Box w="100%" h="auto" maxW={{ base: "6rem", lg: "10rem" }}>
@@ -198,39 +198,48 @@ export const StockDetails = () => {
 
                                         <RedGradientBtn>Symulate Investment</RedGradientBtn>
                                     </Box>
-                                </> */}
-                {/* )} */}
-                {/* </GridItem> */}
-                {/* <GridItem colSpan={2}>
-                    <Text>{showMore ? profile?.longBusinessSummary : profile?.longBusinessSummary.substring(0, 300)}</Text>
-                    <UnrollBtn onClick={() => setShowMore(!showMore)}>{showMore ? "Show less" : "Show more"}</UnrollBtn>
-                </GridItem> */}
-                <GridItem colSpan={{ base: 1, lg: 2 }}>
-                    <VStack>
-                        {id && (
-                            <Box>
-                                <Flex justifyContent="space-between" alignItems="center" mb="1.5rem">
-                                    <ButtonGroup borderWidth="0.01rem" borderRadius="0.375rem" p="0.5rem" borderColor="background.600">
-                                        <ChartButton onClick={() => setChartType("range")} chartType={chartType} id="range">
-                                            <Icon as={MdOutlineAreaChart} color="addition.500" w="2.5rem" h="2.5rem" />
-                                        </ChartButton>
-                                        <ChartButton onClick={() => setChartType("candle")} chartType={chartType} id="candle">
-                                            <Icon as={MdOutlineCandlestickChart} color="addition.500" w="2.5rem" h="2.5rem" />
-                                        </ChartButton>
-                                    </ButtonGroup>
+                                </>
+                            )}
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                            <Text>{showMore ? profile?.longBusinessSummary : profile?.longBusinessSummary.substring(0, 300)}</Text>
+                            <UnrollBtn onClick={() => setShowMore(!showMore)}>{showMore ? "Show less" : "Show more"}</UnrollBtn>
+                        </GridItem>
+                        <GridItem colSpan={{ base: 1, lg: 2 }}>
+                            <VStack>
+                                {id && (
                                     <Box>
-                                        <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
+                                        <Flex justifyContent="space-between" alignItems="center" mb="1.5rem">
+                                            <ButtonGroup borderWidth="0.01rem" borderRadius="0.375rem" p="0.5rem" borderColor="background.600">
+                                                <ChartButton onClick={() => setChartType("range")} chartType={chartType} id="range">
+                                                    <Icon as={MdOutlineAreaChart} color="addition.500" w="2.5rem" h="2.5rem" />
+                                                </ChartButton>
+                                                <ChartButton onClick={() => setChartType("candle")} chartType={chartType} id="candle">
+                                                    <Icon as={MdOutlineCandlestickChart} color="addition.500" w="2.5rem" h="2.5rem" />
+                                                </ChartButton>
+                                            </ButtonGroup>
+                                            <Box>
+                                                <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
+                                            </Box>
+                                        </Flex>
+                                        {chartType === "range" ? (
+                                            <RangeStockChart id={id} timePeriod={historyPeriod} />
+                                        ) : (
+                                            <CandleStockChart id={id} timePeriod={historyPeriod} />
+                                        )}
                                     </Box>
-                                </Flex>
-                                {chartType === "range" ? (
-                                    <RangeStockChart id={id} timePeriod={historyPeriod} />
-                                ) : (
-                                    <CandleStockChart id={id} timePeriod={historyPeriod} />
                                 )}
+                            </VStack>
+                        </GridItem>
+                        <GridItem colSpan={{ base: 1, lg: 2 }}>
+                            <Box>
+                                <StockStatistics stats={statisticData} marketCap={marketCap} />
                             </Box>
-                        )}
-                    </VStack>
-                </GridItem>
+                        </GridItem>
+                    </>
+                ) : (
+                    <div>Loading...</div>
+                )}
             </Grid>
         </>
     );

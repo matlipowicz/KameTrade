@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, ISeriesApi, Time } from "lightweight-charts";
 import { Box } from "@chakra-ui/react";
 import { useGetOHLCDataQuery } from "src/redux/store/slices/coinSlice";
+import { OHLCData } from "src/api/crypto";
+import { useQuery } from "@tanstack/react-query";
 
 // TODO: Dopracuj wykresy, aby przy każdej zmianie okresu zmieniały się jednocześnie
 
@@ -33,7 +35,17 @@ export const CandleChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: st
     const [ohlcPeriod, setOhlcPeriod] = useState<any>({ uuid: uuid, timePeriod: "minute", limit: "1440" });
 
     //! OHLC data call
-    const { data: ohlcData, isLoading: ohlcDataLoading } = useGetOHLCDataQuery(ohlcPeriod);
+    // const { data: ohlcData, isLoading: ohlcDataLoading } = useGetOHLCDataQuery(ohlcPeriod);
+
+    const {
+        data: ohlcData,
+        isLoading: ohlcDataLoading,
+        error: ohlcDataError,
+    } = useQuery({
+        queryKey: ["coinHistory", { uuid: uuid, timePeriod: timePeriod }],
+        queryFn: () => OHLCData(ohlcPeriod),
+        staleTime: 1000,
+    });
     const candleStickData = ohlcData?.data.ohlc;
 
     const mappedCandleStickData = candleStickData?.map((data: any) => {
@@ -46,7 +58,6 @@ export const CandleChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: st
         };
     });
     const candleChartData = mappedCandleStickData?.sort((a: any, b: any) => (a.time as number) - (b.time as number));
-
     useEffect(() => {
         switch (timePeriod) {
             case "24h":

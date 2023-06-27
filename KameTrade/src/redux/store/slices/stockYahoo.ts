@@ -6,7 +6,7 @@ if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
 }
 
 const cryptoHeaders = {
-    "X-RapidAPI-Key": import.meta.env.VITE_COINRANKING_API_KEY,
+    "X-RapidAPI-Key": import.meta.env.VITE_COINRANKING_API_KEY_TEMPORARY_REPLACEMENT,
     "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com",
 };
 

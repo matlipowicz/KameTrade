@@ -54,6 +54,9 @@ export const StockColumns = [
                 </HStack>
             );
         },
+        meta: {
+            enableColumnFilters: true,
+        },
     }),
     // columnHelper.display({
     //     id: "show-more",
