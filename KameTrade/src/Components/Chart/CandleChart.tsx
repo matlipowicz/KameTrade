@@ -58,6 +58,7 @@ export const CandleChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: st
         };
     });
     const candleChartData = mappedCandleStickData?.sort((a: any, b: any) => (a.time as number) - (b.time as number));
+
     useEffect(() => {
         switch (timePeriod) {
             case "24h":
