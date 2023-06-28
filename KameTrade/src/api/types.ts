@@ -47,11 +47,11 @@ export interface Stats {
 // Coin
 
 export interface CoinObject {
-    data: Data;
+    data: CoinData;
     status: string;
 }
 
-export interface Data {
+export interface CoinData {
     coin: Coin;
 }
 
@@ -107,6 +107,47 @@ export interface Supply {
 
 // Coin price history
 
+export interface RootHistory {
+    data: HistoryData;
+    status: string;
+}
+
+export interface HistoryData {
+    change: string;
+    history: History[];
+}
+
+export interface History {
+    price: string;
+    timestamp: number;
+}
+
+export interface OHLCDataTypes {
+    status: string;
+    data: OHLCDataCoin;
+}
+
+export interface OHLCDataCoin {
+    ohlc: OHLCObjectData[];
+}
+
+export interface OHLCObjectData {
+    startingAt: number;
+    endingAt: number;
+    open: string;
+    high: string;
+    low: string;
+    close: string;
+    avg: string;
+}
+
+// Stock List
+
+export interface RootStockListObject {
+    data: Datum[];
+    status: string;
+}
+
 export interface StockHistory {
     meta: Datum;
     values: HistoryValues[];
@@ -121,29 +162,15 @@ export interface HistoryValues {
     open: string;
     volume: string;
 }
-export interface RootHistory {
-    data: Data;
-    status: string;
-}
-
-export interface HistoryData {
-    change: string;
-    history: History[];
-}
-
-export interface History {
-    price: string;
-    timestamp: number;
-}
-
-// Stock List
-
-export interface RootStockListObject {
-    data: Datum[];
-    status: string;
-}
-
 export interface Datum {
+    interval: string;
+    currency: string;
+    exchange_timezone: string;
+    exchange: string;
+    mic_code: string;
+    type: string;
+}
+export interface Stocks {
     country: string;
     currency: string;
     exchange: string;
@@ -180,19 +207,8 @@ export interface StockLogo {
     url: string;
 }
 
-// Commodities
-export interface Commodity {
-    change: string;
-    changePercentage: string;
-    high: string;
-    last: string;
-    low: string;
-    name: string;
-    time: string;
-}
-
 // Yahoo - stocks
-export interface YahooRootObject {
+export interface YahooStatisticsRootObject {
     defaultKeyStatistics: DefaultKeyStatistics;
 }
 

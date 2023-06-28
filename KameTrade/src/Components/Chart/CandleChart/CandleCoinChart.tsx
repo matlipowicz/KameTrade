@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, ISeriesApi, Time } from "lightweight-charts";
 import { Box } from "@chakra-ui/react";
-import { useGetHistoryDataQuery } from "src/redux/store/slices/stockTwelve";
-import { UTCTimestamp } from "lightweight-charts";
+import { useGetOHLCDataQuery } from "src/redux/store/slices/coinSlice";
+import { OHLCData } from "src/api/crypto";
+import { useQuery } from "@tanstack/react-query";
+import { CandlestickData } from "lightweight-charts";
 
 // TODO: Dopracuj wykresy, aby przy każdej zmianie okresu zmieniały się jednocześnie
 
@@ -28,60 +30,63 @@ const chartOptions = {
     innerHeight: "100px",
 };
 
-export const CandleStockChart = ({ id, timePeriod }: { id: string; timePeriod: string }) => {
+export const CandleChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: string }) => {
     const candleChartContainer = useRef<HTMLDivElement | null>(null);
     const [currentCandleChart, setCandleChart] = useState<ISeriesApi<"Candlestick"> | null>(null);
-    const [ohlcPeriod, setOhlcPeriod] = useState<any>({ symbol: id, interval: "1min", outputsize: 389 });
+    const [ohlcPeriod, setOhlcPeriod] = useState<any>({ uuid: uuid, timePeriod: "minute", limit: "1440" });
+
+    //! OHLC data call
 
     const {
-        data: historyPrice,
-        isLoading: historyPriceLoading,
-        error: historyPriceError,
-    } = useGetHistoryDataQuery(ohlcPeriod, { skip: !id || !timePeriod });
+        data: ohlcData,
+        isLoading: ohlcDataLoading,
+        error: ohlcDataError,
+    } = useQuery({
+        queryKey: ["coinHistory", { uuid: uuid, timePeriod: timePeriod }],
+        queryFn: () => OHLCData(ohlcPeriod),
+    });
+    const candleStickData = ohlcData?.data.ohlc;
 
-    const historyData = historyPrice?.values;
-
-    const mappedCandleStickData = historyData?.map((data: any) => {
+    const mappedCandleStickData = candleStickData?.map((data) => {
         return {
-            time: (Date.parse(data.datetime) / 1000) as UTCTimestamp,
+            time: data.endingAt as Time,
             open: Number(data.open),
             high: Number(data.high),
             low: Number(data.low),
             close: Number(data.close),
         };
     });
-
-    const candleChartData = mappedCandleStickData?.sort((a, b) => a.time - b.time);
+    const candleChartData = mappedCandleStickData?.sort((a, b) => (a.time as number) - (b.time as number));
 
     useEffect(() => {
         switch (timePeriod) {
             case "24h":
-                setOhlcPeriod({ symbol: id, interval: "1min", outputsize: 389 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "minute", limit: "1440" });
                 break;
             case "7d":
-                setOhlcPeriod({ symbol: id, interval: "5min", outputsize: 389 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "hour", limit: "168" });
                 break;
             case "30d":
-                setOhlcPeriod({ symbol: id, interval: "30min", outputsize: 246 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "hour", limit: "720" });
                 break;
             case "3m":
-                setOhlcPeriod({ symbol: id, interval: "1day", outputsize: 63 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "8hours", limit: "272" });
                 break;
             case "1y":
-                setOhlcPeriod({ symbol: id, interval: "1week", outputsize: 53 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "day", limit: "365" });
                 break;
             case "3y":
-                setOhlcPeriod({ symbol: id, interval: "1week", outputsize: 158 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "day", limit: "1097" });
                 break;
             case "5y":
-                setOhlcPeriod({ symbol: id, interval: "1week", outputsize: 262 });
+                setOhlcPeriod({ uuid: uuid, timePeriod: "day", limit: "1827" });
         }
     }, [timePeriod]);
 
     //! Coin history price call
 
     useEffect(() => {
-        if (candleChartContainer && candleChartData && !historyPriceLoading) {
+        if (candleChartContainer && candleChartData && !ohlcDataLoading) {
             if (currentCandleChart) {
                 currentCandleChart.setData(candleChartData);
             } else {
@@ -99,7 +104,7 @@ export const CandleStockChart = ({ id, timePeriod }: { id: string; timePeriod: s
                 chart.timeScale().fitContent();
             }
         }
-    }, [candleChartData]);
+    }, [ohlcData]);
 
     return (
         <>

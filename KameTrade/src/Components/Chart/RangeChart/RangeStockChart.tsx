@@ -1,9 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { ColorType, createChart, ISeriesApi, Time } from "lightweight-charts";
+import { ColorType, createChart, ISeriesApi, UTCTimestamp } from "lightweight-charts";
 import { Box } from "@chakra-ui/react";
-import { useGetHistoricalCoinDataQuery } from "src/redux/store/slices/coinSlice";
-import { useQuery } from "@tanstack/react-query";
-import { historyCoinData } from "src/api/crypto";
+import { StockHistory } from "src/api/types";
+
+type RangeChartProps = {
+    id: string;
+    timePeriod: string;
+    rangeChartData:
+        | {
+              time: UTCTimestamp;
+              value: number;
+          }[]
+        | undefined;
+
+    historyPriceLoading: boolean;
+    historyPrice: StockHistory | undefined;
+};
 
 const chartOptions = {
     layout: { textColor: "white", fontFamily: `'Saira', sans-serif`, background: { type: ColorType.Solid, color: "rgba(0,0,0,0.1)" } },
@@ -27,43 +39,13 @@ const chartOptions = {
     innerHeight: "100px",
 };
 
-export const RangeChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: string }) => {
+export const RangeStockChart = ({ id, timePeriod, rangeChartData, historyPriceLoading, historyPrice }: RangeChartProps) => {
     const chartContainer = useRef<HTMLDivElement | null>(null);
     const [currentRangeChart, setRangeChart] = useState<ISeriesApi<"Area"> | null>(null);
 
-    //! Coin history price call
-
-    // const {
-    //     data: coinHistory,
-    //     isLoading: coinHistoryLoading,
-    //     error: coinHistoryError,
-    // } = useGetHistoricalCoinDataQuery({ uuid: uuid as string, timePeriod: timePeriod }, { skip: !uuid || !timePeriod });
-
-    const {
-        data: coinHistory,
-        isLoading: coinHistoryLoading,
-        error: coinHistoryError,
-    } = useQuery({
-        queryKey: ["coinHistory", { uuid: uuid, timePeriod: timePeriod }],
-        queryFn: () => historyCoinData({ uuid: uuid as string, timePeriod: timePeriod }),
-        staleTime: 1000,
-    });
-    const priceHistory = coinHistory?.data?.history;
-
-    //! Mapped price history + sort data in ascending order
-    const mappedPriceHistory = priceHistory?.map((data: any) => {
-        return {
-            time: data.timestamp as Time,
-            value: Number(data.price),
-        };
-    });
-
-    const rangeChartData = mappedPriceHistory?.sort((a: any, b: any) => (a.time as number) - (b.time as number));
-
     useEffect(() => {
-        if (chartContainer && rangeChartData && !coinHistoryLoading) {
+        if (chartContainer && rangeChartData && !historyPriceLoading) {
             if (currentRangeChart) {
-                // chartContainer.current.remove();
                 currentRangeChart.setData(rangeChartData);
             } else {
                 const chart = createChart(chartContainer.current as HTMLElement, chartOptions);
@@ -78,7 +60,7 @@ export const RangeChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: str
                 chart.timeScale().fitContent();
             }
         }
-    }, [rangeChartData, coinHistoryLoading]);
+    }, [historyPrice]);
 
     return (
         <>

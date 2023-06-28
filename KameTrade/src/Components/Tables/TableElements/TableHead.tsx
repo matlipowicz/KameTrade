@@ -2,7 +2,6 @@ import { Thead, Tr, Th, HStack, Box, chakra } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import { flexRender } from "@tanstack/react-table";
 import { Table } from "@tanstack/react-table";
-import { Coins } from "src/redux/sliceTypes";
 
 export const TableHead = <T,>({ table }: { table: Table<T> }) => {
     return (

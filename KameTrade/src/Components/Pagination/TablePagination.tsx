@@ -2,7 +2,7 @@ import { Table } from "@tanstack/react-table";
 import { Box, UnorderedList } from "@chakra-ui/react";
 import { PaginationButton } from "./PaginationButton";
 import { PaginationPage } from "./PaginationPage";
-import { usePagination } from "./PaginationHook";
+import { usePagination } from "src/components/Pagination/PaginationHook";
 import { Coins, Datum } from "src/redux/sliceTypes";
 
 export type TableProps = {

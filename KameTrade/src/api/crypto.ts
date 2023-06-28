@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CoinsData, CoinDataTypes, Coin, AllTimeHigh, HistoryData, CoinObject, CoinPriceTypes } from "src/api/types";
+import { CoinDataTypes, OHLCDataTypes, RootHistory, CoinObject, CoinPriceTypes } from "src/api/types";
 
 if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
     throw new Error("Please provide api key");
@@ -11,8 +11,6 @@ const cryptoHeaders = {
 };
 
 const BASE_URL = "https://coinranking1.p.rapidapi.com";
-
-// TODO: add types to get
 
 export const coinsData = async (limit: number) => {
     try {
@@ -49,7 +47,7 @@ export const coinPrice = async (uuid: string) => {
 
 export const historyCoinData = async ({ uuid, timePeriod }: { uuid: string; timePeriod: string }) => {
     try {
-        const { data } = await axios.get<any>(`${BASE_URL}/coin/${uuid}/history?timePeriod=${timePeriod}`, {
+        const { data } = await axios.get<RootHistory>(`${BASE_URL}/coin/${uuid}/history?timePeriod=${timePeriod}`, {
             headers: cryptoHeaders,
         });
         return data;
@@ -60,7 +58,7 @@ export const historyCoinData = async ({ uuid, timePeriod }: { uuid: string; time
 
 export const OHLCData = async ({ uuid, timePeriod, limit }: { uuid: string; timePeriod: string; limit: number }) => {
     try {
-        const { data } = await axios.get<any>(`${BASE_URL}/coin/${uuid}/ohlc?interval=${timePeriod}&limit=${limit}`, {
+        const { data } = await axios.get<OHLCDataTypes>(`${BASE_URL}/coin/${uuid}/ohlc?interval=${timePeriod}&limit=${limit}`, {
             headers: cryptoHeaders,
         });
         return data;

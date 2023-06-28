@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Datum, StockLogo, Profile, StockHistory } from "src/api/types";
+import { Datum, StockLogo, Profile, StockHistory, YahooStatisticsRootObject, RootStockListObject } from "src/api/types";
 
-if (typeof import.meta.env.VITE_COINRANKING_API_KEY || import.meta.env.VITE_COINRANKING_API_KEY_TEMPORARY_REPLACEMENT === "undefined") {
+if (typeof import.meta.env.VITE_COINRANKING_API_KEY === "undefined") {
     throw new Error("Please provide api key");
 }
 
@@ -21,18 +21,12 @@ const YAHOO_BASE_URL = "https://yahoo-finance15.p.rapidapi.com/api/yahoo";
 //! Twelve Data - API
 export const twelveStockList = async () => {
     try {
-        const { data } = await axios.get<Datum[]>(`${TWELVE_BASE_URL}/stocks?exchange=NASDAQ&format=json`, {
+        const { data } = await axios.get<RootStockListObject>(`${TWELVE_BASE_URL}/stocks?exchange=NASDAQ&format=json`, {
             headers: stockHeaders,
         });
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
 
@@ -43,13 +37,7 @@ export const twelveStockLogo = async (symbol: string) => {
         });
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
 
@@ -60,13 +48,7 @@ export const twelveStockProfile = async (symbol: string) => {
         });
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
 
@@ -77,17 +59,11 @@ export const twelveLastQuote = async ({ symbol, interval }: { symbol: string; in
         });
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
 
-export const twelveHistoryStockData = async ({ symbol, interval, outputsize }: { symbol: string; interval: string; outputsize: string }) => {
+export const twelveHistoryStockData = async ({ symbol, interval, outputsize }: { symbol: string; interval: string; outputsize: number }) => {
     try {
         const { data } = await axios.get<StockHistory>(
             `${TWELVE_BASE_URL}/time_series?symbol=${symbol}&interval=${interval}&outputsize=${outputsize}&format=json`,
@@ -97,49 +73,29 @@ export const twelveHistoryStockData = async ({ symbol, interval, outputsize }: {
         );
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
 
 //! Yahoo Finance - API
 
-temporaryStockYahooHeaders;
-
 export const yahooTotalPrice = async (symbol: string) => {
     try {
-        const { data } = await axios.get<StockHistory>(`${YAHOO_BASE_URL}/qu/quote/${symbol}/default-key-statistics`, {
-            headers: stockHeaders,
+        const { data } = await axios.get<YahooStatisticsRootObject>(`${YAHOO_BASE_URL}/qu/quote/${symbol}/default-key-statistics`, {
+            headers: temporaryStockYahooHeaders,
         });
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
 export const yahooStockProfile = async (symbol: string) => {
     try {
         const { data } = await axios.get<StockHistory>(`${TWELVE_BASE_URL}/qu/quote/${symbol}/asset-profile`, {
-            headers: stockHeaders,
+            headers: temporaryStockYahooHeaders,
         });
         return data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log("error message: ", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error: ", error);
-            return "An unexpected error occurred";
-        }
+        console.log(error);
     }
 };
