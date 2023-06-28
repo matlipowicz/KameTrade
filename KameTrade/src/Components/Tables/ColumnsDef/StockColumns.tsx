@@ -3,14 +3,14 @@ import { Box, Text, Image, HStack, Button, chakra } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Datum } from "src/redux/sliceTypes";
+import { Stocks } from "src/api/types";
 
 export type DataTableProps<Data extends object> = {
     data: Data[];
     columns: ColumnDef<Data, any>[];
 };
 // TODO: Show more as link with arrow
-const columnHelper = createColumnHelper<Datum>();
+const columnHelper = createColumnHelper<Partial<Stocks>>();
 export const StockColumns = [
     columnHelper.accessor("symbol", {
         header: () => <Text>Symbol</Text>,

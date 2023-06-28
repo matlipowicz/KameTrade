@@ -1,28 +1,19 @@
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetCoinDetailsQuery, useGetHistoricalCoinDataQuery, useGetCoinPriceQuery } from "src/redux/store/slices/coinSlice";
-import { Select, Flex, GridItem, SimpleGrid, HStack, Box, Text, Button, Stack, Image, Heading, chakra, Grid, VStack, Icon } from "@chakra-ui/react";
-import { RangeChart } from "../Chart/RangeChart";
-import { PeriodSelector } from "./PeriodSelector";
-import { useMemo } from "react";
-import millify from "millify";
-import { RedGradientBtn } from "../Buttons/RedGradientBtn";
-import { CandleChart } from "../Chart/CandleChart";
-import { PurpleBtn } from "../Buttons/PurpleBtn";
-import { ButtonGroup } from "@chakra-ui/react";
-import { ChartButton } from "../Buttons/ChartButton";
-import { MdOutlineAreaChart, MdOutlineCandlestickChart } from "react-icons/md";
+
+import { Flex, GridItem, Box, Text, Image, Heading, chakra, Grid, VStack, Icon, ButtonGroup } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { RedGradientBtn } from "../../Buttons/RedGradientBtn";
 import { AssetStatistics } from "./CoinStatistics";
 import { coinDetails, coinPrice } from "src/api/crypto";
-import { useQuery } from "@tanstack/react-query";
-import { historyCoinData } from "src/api/crypto";
-
-// TODO: Fix issue with to large amount of data logged to the console
+import { ChartCollection } from "src/components/Chart/CoinCharts";
+import { ChartSelector } from "src/components/AssetDetails/ChartSelector";
+import { PeriodSelector } from "src/components/AssetDetails/PeriodSelector";
 
 export const CoinDetails = () => {
     const { uuid } = useParams();
     const [chartType, setChartType] = useState<string>("range");
-    const [historyPeriod, setHistoryPeriod] = useState("24h");
+    const [historyPeriod, setHistoryPeriod] = useState<string>("24h");
     const periods = ["24h", "7d", "30d", "3m", "1y", "3y", "5y"];
 
     //! Coin current price call
@@ -55,9 +46,8 @@ export const CoinDetails = () => {
     }
 
     // TODO: inactive button when user not logged in
-    // TODO: create small chunks of codes, shrink them to several components
+    // TODO: add spinner / skeleton on loading
     //! TODO: prevent chart from rendering whole page!
-    //! TODO: try to clear previous chart and create new one after data change
 
     return (
         <>
@@ -142,23 +132,12 @@ export const CoinDetails = () => {
                         {uuid && (
                             <Box>
                                 <Flex justifyContent="space-between" alignItems="center" mb="1.5rem">
-                                    <ButtonGroup borderWidth="0.01rem" borderRadius="0.375rem" p="0.5rem" borderColor="background.600">
-                                        <ChartButton onClick={() => setChartType("range")} chartType={chartType} id="range">
-                                            <Icon as={MdOutlineAreaChart} color="addition.500" w="2.5rem" h="2.5rem" />
-                                        </ChartButton>
-                                        <ChartButton onClick={() => setChartType("candle")} chartType={chartType} id="candle">
-                                            <Icon as={MdOutlineCandlestickChart} color="addition.500" w="2.5rem" h="2.5rem" />
-                                        </ChartButton>
-                                    </ButtonGroup>
+                                    <ChartSelector setChartType={setChartType} chartType={chartType} />
                                     <Box>
                                         <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
                                     </Box>
                                 </Flex>
-                                {chartType === "range" ? (
-                                    <RangeChart uuid={uuid} timePeriod={historyPeriod} />
-                                ) : (
-                                    <CandleChart uuid={uuid} timePeriod={historyPeriod} />
-                                )}
+                                <ChartCollection chartType={chartType} uuid={uuid} historyPeriod={historyPeriod} />
                             </Box>
                         )}
                     </VStack>

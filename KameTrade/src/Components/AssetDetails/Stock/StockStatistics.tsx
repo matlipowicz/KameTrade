@@ -7,7 +7,7 @@ import { FaRegHandshake } from "react-icons/fa";
 import millify from "millify";
 
 export const StockStatistics = ({ stats, marketCap }: { stats: any | undefined; marketCap: any | undefined }) => {
-    console.log(stats);
+    // console.log(stats);
 
     // useEffect(() => {
     //     if (details !== undefined) {
@@ -15,7 +15,7 @@ export const StockStatistics = ({ stats, marketCap }: { stats: any | undefined; 
     //         setDate(allTimeHighTimestamp);
     //     }
     // }, [details]);
-    console.log(marketCap);
+    // console.log(marketCap);
     return (
         <Box display="flex" justifyContent="space-around" gap="5rem" alignItems="center">
             <Box flex={1}>

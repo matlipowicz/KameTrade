@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { PaginationHookProps } from "./paginationTypes";
+import { PaginationHookProps } from "src/components/Pagination/paginationTypes";
 
 // Range counter
 const rangeTest = (start: number, end: number) => {

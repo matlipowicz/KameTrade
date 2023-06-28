@@ -22,21 +22,23 @@ import {
     Icon,
     Link,
 } from "@chakra-ui/react";
-import { RangeStockChart } from "../Chart/RangeStockChart";
-import { PeriodSelector } from "./PeriodSelector";
+import { RangeStockChart } from "../../Chart/RangeChart/RangeStockChart";
+import { PeriodSelector } from "../PeriodSelector";
 import { useMemo } from "react";
 import millify from "millify";
-import { RedGradientBtn } from "../Buttons/RedGradientBtn";
-import { CandleChart } from "../Chart/CandleChart";
-import { PurpleBtn } from "../Buttons/PurpleBtn";
+import { RedGradientBtn } from "../../Buttons/RedGradientBtn";
+import { CandleChart } from "../../Chart/CandleChart/CandleCoinChart";
+import { PurpleBtn } from "../../Buttons/PurpleBtn";
 import { ButtonGroup } from "@chakra-ui/react";
-import { ChartButton } from "../Buttons/ChartButton";
+import { ChartButton } from "../../Buttons/ChartButton";
 
 import { MdOutlineAreaChart, MdOutlineCandlestickChart } from "react-icons/md";
-import { AssetStatistics } from "./CoinStatistics";
-import { UnrollBtn } from "../Buttons/UnrollBtn";
-import { CandleStockChart } from "../Chart/CandleStockChart";
+import { AssetStatistics } from "../Coin/CoinStatistics";
+import { UnrollBtn } from "../../Buttons/UnrollBtn";
+import { CandleStockChart } from "../../Chart/CandleChart/CandleStockChart";
 import { StockStatistics } from "./StockStatistics";
+import { useQuery } from "@tanstack/react-query";
+import { StockCharts } from "src/components/Chart/StockCharts";
 
 // TODO: Create outputsize(period in days to get historical data)
 // TODO:
@@ -222,11 +224,7 @@ export const StockDetails = () => {
                                                 <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
                                             </Box>
                                         </Flex>
-                                        {chartType === "range" ? (
-                                            <RangeStockChart id={id} timePeriod={historyPeriod} />
-                                        ) : (
-                                            <CandleStockChart id={id} timePeriod={historyPeriod} />
-                                        )}
+                                        <StockCharts id={id} historyPeriod={historyPeriod} chartType={chartType} />
                                     </Box>
                                 )}
                             </VStack>

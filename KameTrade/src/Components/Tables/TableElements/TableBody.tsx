@@ -1,6 +1,5 @@
 import { Tbody, Tr, Td } from "@chakra-ui/react";
 import { flexRender } from "@tanstack/react-table";
-import { Coin, Coins } from "src/redux/sliceTypes";
 import { Table } from "@tanstack/react-table";
 
 export const TableBody = <T extends { name: string }>({ table }: { table: Table<T> }) => {

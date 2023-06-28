@@ -1,15 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {
-    useReactTable,
-    getCoreRowModel,
-    getSortedRowModel,
-    getPaginationRowModel,
-    getFilteredRowModel,
-    flexRender,
-    TableState,
-} from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, getSortedRowModel, getPaginationRowModel, getFilteredRowModel } from "@tanstack/react-table";
 import { Table, HStack, Input, Box } from "@chakra-ui/react";
-import { TablePagination } from "src/components/Pagination/TablePagination";
+import { TablePagination } from "src/Components/Pagination/TablePagination";
 import { RowSelector } from "src/components/Tables/RowSelector";
 import { CoinColumns } from "src/components/Tables/ColumnsDef/CoinColumns";
 import { TableSpinner } from "src/components/Tables/LoadingData/TableSpinner";
