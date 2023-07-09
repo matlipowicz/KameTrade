@@ -44,21 +44,27 @@ export const RangeStockChart = ({ id, timePeriod, rangeChartData, historyPriceLo
     const [currentRangeChart, setRangeChart] = useState<ISeriesApi<"Area"> | null>(null);
 
     useEffect(() => {
-        if (chartContainer && rangeChartData && !historyPriceLoading) {
-            if (currentRangeChart) {
-                currentRangeChart.setData(rangeChartData);
-            } else {
-                const chart = createChart(chartContainer.current as HTMLElement, chartOptions);
-                const areaSeries = chart.addAreaSeries({
-                    lineColor: "#6857F2",
-                    topColor: "#493da9",
-                    bottomColor: "rgba(104, 87, 242, 0.28)",
-                });
+        if(rangeChartData){
+            const handleResize = () => {
+                chart.applyOptions({ width: chartContainer.current?.clientWidth });
+        };
+            const chart = createChart(chartContainer.current as HTMLElement, chartOptions);
+            const areaSeries = chart.addAreaSeries({
+                lineColor: "#6857F2",
+                topColor: "#493da9",
+                bottomColor: "rgba(104, 87, 242, 0.28)",
+            });
 
-                setRangeChart(areaSeries);
-                areaSeries.setData(rangeChartData);
-                chart.timeScale().fitContent();
-            }
+            setRangeChart(areaSeries);
+            areaSeries.setData(rangeChartData);
+            chart.timeScale().fitContent();
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+
+                chart.remove();
+            };
         }
     }, [historyPrice]);
 

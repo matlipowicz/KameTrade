@@ -1,4 +1,4 @@
-import { Box, Text, Icon, chakra, Table, Tbody, Tr, Th, Td, Link, Flex, Heading } from "@chakra-ui/react";
+import { Box, Icon, chakra, Table, Tbody, Tr, Th, Td, Link, Heading } from "@chakra-ui/react";
 import { AiOutlineTrophy, AiOutlineDollar } from "react-icons/ai";
 import { MdOutlineQueryStats } from "react-icons/md";
 import {

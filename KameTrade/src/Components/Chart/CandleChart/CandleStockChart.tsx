@@ -46,23 +46,29 @@ export const CandleStockChart = ({ id, timePeriod, candleChartData, historyPrice
     const [currentCandleChart, setCandleChart] = useState<ISeriesApi<"Candlestick"> | null>(null);
 
     useEffect(() => {
-        if (candleChartContainer && candleChartData && !historyPriceLoading) {
-            if (currentCandleChart) {
-                currentCandleChart.setData(candleChartData);
-            } else {
-                let chart = createChart(candleChartContainer.current as HTMLElement, chartOptions);
+        if(candleChartData){
+            const handleResize = () => {
+                chart.applyOptions({ width: candleChartContainer.current?.clientWidth });
+        };
+        const chart = createChart(candleChartContainer.current as HTMLElement, chartOptions);
 
-                const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: "#26a69a",
-                    downColor: "#ef5350",
-                    borderVisible: false,
-                    wickUpColor: "#26a69a",
-                    wickDownColor: "#ef5350",
-                });
-                setCandleChart(candlestickSeries);
-                chart.timeScale().fitContent();
-                candlestickSeries.setData(candleChartData);
-            }
+        const candlestickSeries = chart.addCandlestickSeries({
+            upColor: "#26a69a",
+            downColor: "#ef5350",
+            borderVisible: false,
+            wickUpColor: "#26a69a",
+            wickDownColor: "#ef5350",
+        });
+            setCandleChart(candlestickSeries);
+            chart.timeScale().fitContent();
+            candlestickSeries.setData(candleChartData);
+            window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+
+            chart.remove();
+        };
         }
     }, [historyPrice]);
 

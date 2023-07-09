@@ -1,5 +1,13 @@
 /* ! Reset and default styles */
-
+:root {
+    --toastify-color-dark: #fe3e6c;
+    --toastify-color-error: rgba(255, 255, 255, 0.5);
+    --toastify-color-transparent: rgba(0, 0, 0, 0.7);
+    --toastify-color-light: #77dd77;
+    --toastify-color-success: #28a228;
+    --toastify-text-color-light: rgba(13, 52, 13, 0.5);
+    --toastify-text-color-dark: rgba(255, 255, 255, 0.5);
+}
 *,
 *::after,
 *::before {

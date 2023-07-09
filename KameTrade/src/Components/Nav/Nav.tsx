@@ -1,18 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import logo from "src/assets/logo/Dark-version.svg";
-import { Box, Flex, Spacer, Text, HStack, useDisclosure, IconButton } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Text, HStack, useDisclosure, IconButton, Button } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { ButtonContainer } from "src/components/Nav/Buttons";
 
 import { NavBar } from "src/components/Nav/NavElements";
 import { SideNav } from "src/components/Nav/SideNav";
+import { Avatar } from "src/components/Nav/UserAvatar";
+import { AuthContext } from "src/context/AuthContext";
+import { AvatarOptions } from "src/components/Login/AvatarOptions";
 
 // TODO: React icons for mobile navbar
 
 export const Navigation = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [color, setColor] = useState<boolean>(false);
+    const auth = useContext(AuthContext);
 
     const changeColor = () => {
         window.scrollY >= 90 ? setColor(true) : setColor(false);
@@ -46,7 +50,7 @@ export const Navigation = () => {
 
                 <Flex gap={"5rem"} display={{ base: "none", xl: "flex" }}>
                     <NavBar />
-                    <ButtonContainer />
+                    {auth.user !== undefined || null ? <AvatarOptions /> : <ButtonContainer />}
                 </Flex>
 
                 <SideNav isOpen={isOpen} onClose={onClose} />

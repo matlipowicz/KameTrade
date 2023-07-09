@@ -1,16 +1,16 @@
 import { UnorderedList } from "@chakra-ui/react";
 import { TabItem } from "./TabItem";
-import { useDispatch } from "react-redux";
-import { assetActions } from "src/redux/store/rootStore";
+import { TableTabContext } from "src/context/TableTab";
+import { useContext } from "react";
 
 export const AssetTabs = () => {
-    const dispatch = useDispatch();
-    // TODO: Add some animation on tabs change
+    const { setAssetTab } = useContext(TableTabContext);
+
     return (
         <>
             <UnorderedList display="flex" bg="rgba(0,0,0,0.16)" w="min-content" marginLeft="0">
-                <TabItem onClick={() => dispatch(assetActions.handleTabChange("coin-tab"))} title={"Coins"} id="coin-tab" />
-                <TabItem onClick={() => dispatch(assetActions.handleTabChange("stock-tab"))} title={"Stocks"} id="stock-tab" />
+                <TabItem onClick={() => setAssetTab("coin-tab")} title={"Coins"} id="coin-tab" />
+                <TabItem onClick={() => setAssetTab("stock-tab")} title={"Stocks"} id="stock-tab" />
             </UnorderedList>
         </>
     );

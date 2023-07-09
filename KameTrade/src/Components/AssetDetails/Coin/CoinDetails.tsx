@@ -1,7 +1,7 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { Flex, GridItem, Box, Text, Image, Heading, chakra, Grid, VStack, Icon, ButtonGroup } from "@chakra-ui/react";
+import { Flex, GridItem, Box, Text, Image, Heading, chakra, Grid, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { RedGradientBtn } from "../../Buttons/RedGradientBtn";
 import { AssetStatistics } from "./CoinStatistics";
@@ -9,8 +9,10 @@ import { coinDetails, coinPrice } from "src/api/crypto";
 import { ChartCollection } from "src/components/Chart/CoinCharts";
 import { ChartSelector } from "src/components/AssetDetails/ChartSelector";
 import { PeriodSelector } from "src/components/AssetDetails/PeriodSelector";
+import { AuthContext } from "src/context/AuthContext";
 
 export const CoinDetails = () => {
+    const auth = useContext(AuthContext);
     const { uuid } = useParams();
     const [chartType, setChartType] = useState<string>("range");
     const [historyPeriod, setHistoryPeriod] = useState<string>("24h");
@@ -124,7 +126,7 @@ export const CoinDetails = () => {
                             <Text>{details?.description}</Text>
                         </Box>
 
-                        <RedGradientBtn>Symulate Investment</RedGradientBtn>
+                        <RedGradientBtn disable={auth.session !== null ? false : true}>Symulate Investment</RedGradientBtn>
                     </Box>
                 </GridItem>
                 <GridItem colSpan={{ base: 1, lg: 2 }}>
