@@ -6,6 +6,10 @@ import { AssetTabs } from "src/components/Tables/AssetTabs";
 import { Coins } from "./TableAssets/Coins";
 import { Stocks } from "./TableAssets/Stocks";
 import { DebouncedInput } from "./Filter/DebouncedInput";
+import { TableTabContext } from "src/context/TableTab";
+import { useContext } from "react";
+
+//TODO: Clear input after going to other page of table
 
 // import { Filter } from "./TableAssets/Coins";
 
@@ -16,9 +20,7 @@ import { DebouncedInput } from "./Filter/DebouncedInput";
 export function BrowseTable() {
     const [cryptoGlobalFilter, setCryptoGlobalFilter] = useState("");
     const [stockGlobalFilter, setStockGlobalFilter] = useState("");
-    let assetType: any = useSelector((state: RootState) => {
-        return state.tabs.assetType;
-    });
+    let { assetTab } = useContext(TableTabContext);
 
     return (
         <>
@@ -39,13 +41,13 @@ export function BrowseTable() {
                         <AssetTabs />
                     </Box>
                     <Box alignSelf="end">
-                        {assetType === "coin-tab" ? (
+                        {assetTab === "coin-tab" ? (
                             <DebouncedInput
                                 value={cryptoGlobalFilter ?? ""}
                                 onChange={(value) => setCryptoGlobalFilter(String(value))}
                                 placeholder="Enter token name"
                             />
-                        ) : assetType === "stock-tab" ? (
+                        ) : assetTab === "stock-tab" ? (
                             <DebouncedInput
                                 value={stockGlobalFilter ?? ""}
                                 onChange={(value) => setStockGlobalFilter(String(value))}
@@ -56,10 +58,10 @@ export function BrowseTable() {
                 </Flex>
 
                 <Box w="100%">
-                    {assetType === "coin-tab" ? (
+                    {assetTab === "coin-tab" ? (
                         <Coins globalFilter={cryptoGlobalFilter} setGlobalFilter={setCryptoGlobalFilter} />
                     ) : (
-                        (assetType = "stock-tab" ? <Stocks globalFilter={stockGlobalFilter} setGlobalFilter={setStockGlobalFilter} /> : null)
+                        (assetTab = "stock-tab" ? <Stocks globalFilter={stockGlobalFilter} setGlobalFilter={setStockGlobalFilter} /> : null)
                     )}
                 </Box>
             </Box>

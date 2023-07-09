@@ -22,7 +22,6 @@ const chartOptions = {
     timeScale: {
         timeVisible: true,
     },
-
     innerWidth: "100px",
     innerHeight: "100px",
 };
@@ -54,20 +53,27 @@ export const RangeChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: str
     const rangeChartData = mappedPriceHistory?.sort((a: any, b: any) => (a.time as number) - (b.time as number));
 
     useEffect(() => {
-        if (chartContainer && rangeChartData && !coinHistoryLoading) {
-            if (currentRangeChart) {
-                currentRangeChart.setData(rangeChartData);
-            } else {
-                const chart = createChart(chartContainer.current as HTMLElement, chartOptions);
-                const areaSeries = chart.addAreaSeries({
-                    lineColor: "#6857F2",
-                    topColor: "#493da9",
-                    bottomColor: "rgba(104, 87, 242, 0.28)",
-                });
-                setRangeChart(areaSeries);
-                chart.timeScale().fitContent();
-                areaSeries.setData(rangeChartData);
-            }
+        if (rangeChartData) {
+            const handleResize = () => {
+                chart.applyOptions({ width: chartContainer.current?.clientWidth });
+            };
+
+            const chart = createChart(chartContainer.current as HTMLElement, chartOptions);
+
+            const areaSeries = chart.addAreaSeries({
+                lineColor: "#6857F2",
+                topColor: "#493da9",
+                bottomColor: "rgba(104, 87, 242, 0.28)",
+            });
+            setRangeChart(areaSeries);
+            chart.timeScale().fitContent();
+            areaSeries.setData(rangeChartData);
+            window.addEventListener("resize", handleResize);
+
+            return () => {
+                window.removeEventListener("resize", handleResize);
+                chart.remove();
+            };
         }
     }, [coinHistory]);
 

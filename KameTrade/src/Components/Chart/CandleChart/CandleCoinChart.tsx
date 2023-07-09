@@ -86,24 +86,30 @@ export const CandleChart = ({ uuid, timePeriod }: { uuid: string; timePeriod: st
     //! Coin history price call
 
     useEffect(() => {
-        if (candleChartContainer && candleChartData && !ohlcDataLoading) {
-            if (currentCandleChart) {
-                currentCandleChart.setData(candleChartData);
-            } else {
-                const chart = createChart(candleChartContainer.current as HTMLElement, chartOptions);
+       if(candleChartData){
+            const handleResize = () => {
+                chart.applyOptions({ width: candleChartContainer.current?.clientWidth });
+        };
+            const chart = createChart(candleChartContainer.current as HTMLElement, chartOptions);
 
-                const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: "#26a69a",
-                    downColor: "#ef5350",
-                    borderVisible: false,
-                    wickUpColor: "#26a69a",
-                    wickDownColor: "#ef5350",
-                });
-                setCandleChart(candlestickSeries);
-                candlestickSeries.setData(candleChartData);
-                chart.timeScale().fitContent();
-            }
-        }
+            const candlestickSeries = chart.addCandlestickSeries({
+                upColor: "#26a69a",
+                downColor: "#ef5350",
+                borderVisible: false,
+                wickUpColor: "#26a69a",
+                wickDownColor: "#ef5350",
+            });
+            setCandleChart(candlestickSeries);
+            candlestickSeries.setData(candleChartData);
+            chart.timeScale().fitContent();
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+
+                chart.remove();
+            };
+       }
     }, [ohlcData]);
 
     return (

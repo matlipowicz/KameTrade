@@ -1,47 +1,21 @@
-import { useGetStockLogoQuery, useGetStockLastQuoteQuery, useGetHistoryDataQuery } from "src/redux/store/slices/stockTwelve";
+import { useGetStockLogoQuery, useGetStockLastQuoteQuery } from "src/redux/store/slices/stockTwelve";
 import { useGetStockProfileQuery } from "src/redux/store/slices/stockYahoo";
 import { useGetStockTotalPriceQuery } from "src/redux/store/slices/stockYahoo";
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-
-import {
-    Select,
-    Flex,
-    GridItem,
-    SimpleGrid,
-    HStack,
-    Box,
-    Text,
-    Button,
-    Stack,
-    Image,
-    Heading,
-    chakra,
-    Grid,
-    VStack,
-    Icon,
-    Link,
-} from "@chakra-ui/react";
-import { RangeStockChart } from "../../Chart/RangeChart/RangeStockChart";
-import { PeriodSelector } from "../PeriodSelector";
-import { useMemo } from "react";
-import millify from "millify";
-import { RedGradientBtn } from "../../Buttons/RedGradientBtn";
-import { CandleChart } from "../../Chart/CandleChart/CandleCoinChart";
-import { PurpleBtn } from "../../Buttons/PurpleBtn";
-import { ButtonGroup } from "@chakra-ui/react";
-import { ChartButton } from "../../Buttons/ChartButton";
-
+import { ChangeEvent, useState } from "react";
 import { MdOutlineAreaChart, MdOutlineCandlestickChart } from "react-icons/md";
-import { AssetStatistics } from "../Coin/CoinStatistics";
-import { UnrollBtn } from "../../Buttons/UnrollBtn";
-import { CandleStockChart } from "../../Chart/CandleChart/CandleStockChart";
-import { StockStatistics } from "./StockStatistics";
+import { useParams } from "react-router-dom";
+import { Flex, GridItem, Box, Text, Image, Heading, chakra, Grid, VStack, Icon, Link, ButtonGroup } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { PeriodSelector } from "src/components/AssetDetails/PeriodSelector";
+import { RedGradientBtn } from "src/components/Buttons/RedGradientBtn";
+import { ChartButton } from "src/components/Buttons/ChartButton";
+import { UnrollBtn } from "src/components/Buttons/UnrollBtn";
+import { StockStatistics } from "./StockStatistics";
 import { StockCharts } from "src/components/Chart/StockCharts";
+import { twelveStockLogo, yahooStockProfile, twelveLastQuote, yahooTotalPrice } from "src/api/stock";
+import millify from "millify";
 
-// TODO: Create outputsize(period in days to get historical data)
-// TODO:
+// TODO: Create skeletons on loading
 
 export const StockDetails = () => {
     const { id } = useParams();
@@ -50,29 +24,50 @@ export const StockDetails = () => {
     const [historyPeriod, setHistoryPeriod] = useState("24h");
     const periods = ["24h", "7d", "30d", "3m", "1y", "3y", "5y"];
 
-    const { data: stockLogo, isFetching: stockLogoFetching, error: stockLogoError } = useGetStockLogoQuery(id as string);
-    const { data: stockProfile, isFetching: stockProfileFetching, error: stockProfileError } = useGetStockProfileQuery(id as string);
+    const {
+        data: stockLogo,
+        isFetching: stockLogoFetching,
+        error: stockLogoError,
+    } = useQuery({
+        queryKey: ["logo", { symbol: id as string }],
+        queryFn: () => twelveStockLogo(id as string),
+    });
     const {
         data: stockStatistics,
         isFetching: stockStatisticsFetching,
         error: stockStatisticsError,
-    } = useGetStockLastQuoteQuery({ symbol: id as string, interval: "1day" });
+    } = useQuery({
+        queryKey: ["quote", { symbol: id as string, interval: "1day" as string }],
+        queryFn: () => twelveLastQuote({ symbol: id as string, interval: "1day" as string }),
+    });
+    const {
+        data: stockProfile,
+        isFetching: stockProfileFetching,
+        error: stockProfileError,
+    } = useQuery({
+        queryKey: ["profile", { symbol: id as string }],
+        queryFn: () => yahooStockProfile(id as string),
+    });
 
-    const { data: stockTotalPrice, isFetching: stockTotalPriceFetching, error: stockTotalPriceError } = useGetStockTotalPriceQuery(id as string);
+    const {
+        data: stockTotalPrice,
+        isFetching: stockTotalPriceFetching,
+        error: stockTotalPriceError,
+    } = useQuery({
+        queryKey: ["totalPrice", { symbol: id as string }],
+        queryFn: () => yahooTotalPrice(id as string),
+    });
 
     // Asset info
     const logo = stockLogo?.url;
-    const profile = stockProfile?.assetProfile;
+    const profile = stockProfile;
     const statisticData = stockStatistics;
-    const marketCap = stockTotalPrice?.defaultKeyStatistics.enterpriseValue;
+    const marketCap = stockTotalPrice?.defaultKeyStatistics?.enterpriseValue;
 
     function historyHandleChange(e: ChangeEvent<HTMLSelectElement>) {
         const event = e.target;
         setHistoryPeriod(event.value);
     }
-
-    // console.log(statisticData);
-    // TODO: WORK on Period of data
 
     return (
         <>
@@ -86,7 +81,7 @@ export const StockDetails = () => {
                 <GridItem colSpan={{ base: 1, lg: 2 }} justifySelf="end">
                     <PeriodSelector value={historyPeriod} onChange={historyHandleChange} periods={periods} />
                 </GridItem>
-                {statisticData && profile !== undefined ? (
+                {statisticData && profile && logo && marketCap !== undefined ? (
                     <>
                         <GridItem colStart={1} colEnd={2}>
                             <Box display="flex" gap="4rem" as="section" mb={{ base: "3rem", lg: "6rem" }}>
@@ -96,10 +91,10 @@ export const StockDetails = () => {
                                 <Box>
                                     <Box display="flex" alignItems="baseline" gap="1rem">
                                         <Heading as="h1" size="4xl">
-                                            {statisticData?.name}
+                                            {statisticData.name}
                                         </Heading>
                                         <Heading as="h1" size="4xl">
-                                            {statisticData?.symbol}
+                                            {statisticData.symbol}
                                         </Heading>
                                     </Box>
                                     <Box>
@@ -111,7 +106,7 @@ export const StockDetails = () => {
                                                 $
                                             </chakra.span>
                                             <Text fontSize="2.5rem" color="addition.200">
-                                                {`${Number(statisticData?.close).toFixed(2)}`} <chakra.span color="addition.300">USD</chakra.span>
+                                                {`${Number(statisticData.close).toFixed(2)}`} <chakra.span color="addition.300">USD</chakra.span>
                                             </Text>
                                         </Box>
                                     </Box>
@@ -121,12 +116,12 @@ export const StockDetails = () => {
                                                 <Text>
                                                     <chakra.span color="addition.800">{historyPeriod}</chakra.span> Change
                                                 </Text>
-                                                <Text color={Number(statisticData?.percent_change) > 0 ? "addition.200" : "addition.500"}>
-                                                    {Number(statisticData?.percent_change).toFixed(2)}%
+                                                <Text color={Number(statisticData.percent_change) > 0 ? "addition.200" : "addition.500"}>
+                                                    {Number(statisticData.percent_change).toFixed(2)}%
                                                 </Text>
 
-                                                <Text color={Number(statisticData?.change) > 0 ? "addition.200" : "addition.500"}>
-                                                    {Number(statisticData?.change).toFixed(4)} USD
+                                                <Text color={Number(statisticData.change) > 0 ? "addition.200" : "addition.500"}>
+                                                    {Number(statisticData.change).toFixed(4)} USD
                                                 </Text>
                                             </Box>
                                         </Box>
@@ -135,73 +130,71 @@ export const StockDetails = () => {
                             </Box>
                         </GridItem>
                         <GridItem colStart={{ base: 1, lg: 2 }} colEnd={{ base: 2, lg: 3 }}>
-                            {profile && (
-                                <>
-                                    <Box display="flex" flexDir="column" alignItems="center" gap="5rem">
-                                        <Box
-                                            bg={"rgba(0,0,0,0.16)"}
-                                            p={{ base: "3rem", lg: "6rem" }}
-                                            borderRadius="0.375rem"
-                                            backdropFilter="blur(1rem)"
-                                            boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)"
-                                        >
-                                            <Heading size="2xl" mb={{ base: "2rem", lg: "3rem" }}>{`About ${statisticData?.name}`}</Heading>
-                                            <Grid gridTemplateColumns={{ base: "1fr", md: "repeat(2,1fr)", "2xl": "repeat(3,1fr)" }} gap="3rem">
-                                                <Box>
-                                                    <Text fontWeight={700}>Sector</Text>
-                                                    <Text>
-                                                        <chakra.span>{profile?.sector}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>Industry</Text>
-                                                    <Text>
-                                                        <chakra.span>{profile?.industry}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>CEO</Text>
-                                                    <Text>
-                                                        <chakra.span>{profile?.companyOfficers[0].name}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>Website</Text>
-                                                    <Text>
-                                                        <Link href={profile?.website}>{profile?.website.substring(8, profile?.website.lenght)}</Link>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>Employess</Text>
-                                                    <Text>
-                                                        <chakra.span>{millify(profile?.fullTimeEmployees)}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>Country</Text>
-                                                    <Text>
-                                                        <chakra.span>{profile?.country}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>City</Text>
-                                                    <Text>
-                                                        <chakra.span>{profile?.city}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                                <Box>
-                                                    <Text fontWeight={700}>Address</Text>
-                                                    <Text>
-                                                        <chakra.span>{profile?.address1}</chakra.span>
-                                                    </Text>
-                                                </Box>
-                                            </Grid>
+                            <Box display="flex" flexDir="column" alignItems="center" gap="5rem">
+                                <Box
+                                    bg={"rgba(0,0,0,0.16)"}
+                                    p={{ base: "3rem", lg: "6rem" }}
+                                    borderRadius="0.375rem"
+                                    backdropFilter="blur(1rem)"
+                                    boxShadow="2px 14px 19px -10px rgba(0, 0, 0, 0.5)"
+                                >
+                                    <Heading size="2xl" mb={{ base: "2rem", lg: "3rem" }}>{`About ${statisticData.name}`}</Heading>
+                                    <Grid gridTemplateColumns={{ base: "1fr", md: "repeat(2,1fr)", "2xl": "repeat(3,1fr)" }} gap="3rem">
+                                        <Box>
+                                            <Text fontWeight={700}>Sector</Text>
+                                            <Text>
+                                                <chakra.span>{profile.sector}</chakra.span>
+                                            </Text>
                                         </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>Industry</Text>
+                                            <Text>
+                                                <chakra.span>{profile.industry}</chakra.span>
+                                            </Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>CEO</Text>
+                                            <Text>
+                                                <chakra.span>
+                                                    {profile && profile.companyOfficers.length ? profile.companyOfficers[0].name : ""}
+                                                </chakra.span>
+                                            </Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>Website</Text>
+                                            <Text>
+                                                <Link href={profile.website}>{profile.website.substring(8, profile.website.length)}</Link>
+                                            </Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>Employess</Text>
+                                            <Text>
+                                                <chakra.span>{millify(profile.fullTimeEmployees)}</chakra.span>
+                                            </Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>Country</Text>
+                                            <Text>
+                                                <chakra.span>{profile.country}</chakra.span>
+                                            </Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>City</Text>
+                                            <Text>
+                                                <chakra.span>{profile.city}</chakra.span>
+                                            </Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={700}>Address</Text>
+                                            <Text>
+                                                <chakra.span>{profile.address1}</chakra.span>
+                                            </Text>
+                                        </Box>
+                                    </Grid>
+                                </Box>
 
-                                        <RedGradientBtn>Symulate Investment</RedGradientBtn>
-                                    </Box>
-                                </>
-                            )}
+                                <RedGradientBtn>Symulate Investment</RedGradientBtn>
+                            </Box>
                         </GridItem>
                         <GridItem colSpan={2}>
                             <Text>{showMore ? profile?.longBusinessSummary : profile?.longBusinessSummary.substring(0, 300)}</Text>

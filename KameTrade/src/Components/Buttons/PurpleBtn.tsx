@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Button } from "@chakra-ui/react";
+import { NavigateFunction } from "react-router-dom";
 
 export const PurpleBtn = ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
     return (

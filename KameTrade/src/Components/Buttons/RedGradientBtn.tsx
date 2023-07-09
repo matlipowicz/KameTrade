@@ -1,12 +1,20 @@
 import { Button } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-export const RedGradientBtn = ({ children }: { children: ReactNode }) => {
+export const RedGradientBtn = ({
+    children,
+    type,
+    disable,
+}: {
+    children: ReactNode;
+    type: "button" | "submit" | "reset" | undefined;
+    disable: boolean;
+}) => {
     return (
         <Button
             size="lg"
             p={{ base: "2rem", md: "2.5rem" }}
-            bgGradient="linear(to-r,addition.400,addition.500)"
+            bgGradient={"linear-gradient(to right,addition.400,addition.500)"}
             fontSize={"2rem"}
             color={"background.800"}
             borderWidth={"0.2rem"}
@@ -15,6 +23,9 @@ export const RedGradientBtn = ({ children }: { children: ReactNode }) => {
             variant="unstyled"
             display="flex"
             transition={"0.2s all"}
+            type={type}
+            w="100%"
+            isDisabled={disable}
         >
             {children}
         </Button>

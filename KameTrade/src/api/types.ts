@@ -278,3 +278,92 @@ export interface EnterpriseValue {
     longFmt: string;
     raw: number;
 }
+
+export interface QuoteTypes {
+    symbol: string;
+    name: string;
+    exchange: string;
+    mic_code: string;
+    currency: string;
+    datetime: string;
+    timestamp: number;
+    open: string;
+    high: string;
+    low: string;
+    close: string;
+    volume: string;
+    previous_close: string;
+    change: string;
+    percent_change: string;
+    average_volume: string;
+    is_market_open: boolean;
+    fifty_two_week: FiftyTwoWeek;
+}
+
+export interface FiftyTwoWeek {
+    low: string;
+    high: string;
+    low_change: string;
+    high_change: string;
+    low_change_percent: string;
+    high_change_percent: string;
+    range: string;
+}
+
+export interface StockYahooProfile {
+    assetProfile: AssetProfile;
+}
+
+export interface AssetProfile {
+    address1: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    phone: string;
+    website: string;
+    industry: string;
+    industryDisp: string;
+    sector: string;
+    longBusinessSummary: string;
+    fullTimeEmployees: number;
+    companyOfficers: CompanyOfficer[];
+    auditRisk: number;
+    boardRisk: number;
+    compensationRisk: number;
+    shareHolderRightsRisk: number;
+    overallRisk: number;
+    governanceEpochDate: number;
+    compensationAsOfEpochDate: number;
+    maxAge: number;
+}
+
+export interface CompanyOfficer {
+    maxAge: number;
+    name: string;
+    age?: number;
+    title: string;
+    yearBorn?: number;
+    fiscalYear?: number;
+    totalPay?: TotalPay;
+    exercisedValue: ExercisedValue;
+    unexercisedValue: UnexercisedValue;
+}
+
+export interface TotalPay {
+    raw: number;
+    fmt: string;
+    longFmt: string;
+}
+
+export interface ExercisedValue {
+    raw: number;
+    fmt: any;
+    longFmt: string;
+}
+
+export interface UnexercisedValue {
+    raw: number;
+    fmt: any;
+    longFmt: string;
+}

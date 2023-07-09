@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Button } from "@chakra-ui/react";
 
-export const BlueBtn = ({ children }: { children: ReactNode }) => {
+export const BlueBtn = ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
     return (
         <Button
             borderColor="addition.600"
@@ -11,6 +11,7 @@ export const BlueBtn = ({ children }: { children: ReactNode }) => {
             size="lg"
             fontSize={"2rem"}
             p={{ base: "2rem", md: "2.5rem" }}
+            onClick={onClick}
         >
             {children}
         </Button>

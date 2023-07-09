@@ -11,10 +11,6 @@ const ROUTES = [
         href: "/browse",
     },
     {
-        text: "Live Price",
-        href: "/live_price",
-    },
-    {
         text: "Profile",
         href: "/profile",
     },
